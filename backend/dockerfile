@@ -1,0 +1,18 @@
+# ใช้ Node.js เวอร์ชันที่เสถียร
+FROM node:18
+
+# ตั้ง working directory ใน container
+WORKDIR /app
+
+# คัดลอกไฟล์ package.json และติดตั้ง dependencies
+COPY package*.json ./
+RUN npm install
+
+# คัดลอกไฟล์ทั้งหมดไปใน container
+COPY . .
+
+# เปิด port ที่ backend ใช้งาน (สมมติ 5000)
+EXPOSE 5000
+
+# คำสั่งเริ่มต้นเมื่อ container รัน
+CMD ["npm", "start"]

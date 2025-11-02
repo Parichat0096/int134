@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: course-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=course_db
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  frontend:
+    image: nginx:latest
+    container_name: course-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: course-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: course_db
+    ports:
+      - "3306:3306"  # (ตอน deploy จริงอาจลบออกเพื่อความปลอดภัย)
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+
+# สร้าง network ภายในให้ container เชื่อมกันเอง
+networks:
+  app-network:
+
+# เก็บข้อมูลถาวรของ MySQL
+volumes:
+  db_data:
