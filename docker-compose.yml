@@ -19,6 +19,7 @@ services:
       DB_USER: root
       DB_PASS: pl1password
       DB_NAME: mydb
+      TEAM_CODE: PL-1
     depends_on:
       - db
     ports:
