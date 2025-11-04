@@ -30,9 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     if (!plans || plans.length === 0) {
       tableBody.innerHTML = `
-        <tr>
-          <td colspan="4" class="no-data">No study plans found.</td>
-        </tr>`;
+       `;
       return;
     }
   
