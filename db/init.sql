@@ -6,25 +6,28 @@ CREATE DATABASE IF NOT EXISTS mydb
 
 USE mydb;
 
-CREATE TABLE IF NOT EXISTS study_plan (
+CREATE TABLE IF NOT EXISTS study_plans (
   id INT AUTO_INCREMENT PRIMARY KEY,
   plan_code CHAR(2) NOT NULL UNIQUE,
   name_eng VARCHAR(60) NOT NULL,
   name_th VARCHAR(100) NOT NULL
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS students_plans (
+CREATE TABLE IF NOT EXISTS declared_plans (
   student_id VARCHAR(11) PRIMARY KEY,
   plan_id INT NOT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (plan_id) REFERENCES study_plan(id)
+  FOREIGN KEY (plan_id) REFERENCES study_plans(id)
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-INSERT INTO study_plan (plan_code, name_eng, name_th) VALUES
+INSERT INTO study_plans (plan_code, name_eng, name_th) VALUES
 ('FE', 'Frontend Developer', 'นักพัฒนาฟรอนเอนด์'),
 ('BE', 'Backend Developer', 'นักพัฒนาแบ็กเอนด์'),
-('FS', 'Full-Stack Developer', 'นักพัฒนาฟูลสแต็ก'),
-('AI', 'AI Engineer', 'วิศวกรปัญญาประดิษฐ์'),
-('UX', 'UI/UX Designer', 'นักออกแบบ UI/UX'),
-('DA', 'Data Analyst', 'นักวิเคราะห์ข้อมูล');
+('FS', 'Full-Stack Developer', 'นักพัฒนาฟูลสแตก'),
+('AI', 'AI Developer', 'นักพัฒนาปัญญาประดิษฐ์'),
+('DS', 'Data Scientist', 'นักวิทยาการข้อมูล'),
+('DA', 'Data Analyst', 'นักวิเคราะห์ข้อมูล'),
+('DE', 'Data Engineer', 'วิศวกรข้อมูล'),
+('DB', 'Database Administrator', 'ผู้ดูแลฐานข้อมูล'),
+('UX', 'UX/UI Designer', 'นักออกแบบประสบการณ์ของผู้ใช้และส่วนต่อประสาน');
