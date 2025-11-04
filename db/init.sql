@@ -6,6 +6,11 @@ CREATE DATABASE IF NOT EXISTS mydb
 
 USE mydb;
 
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS declared_plans;
+DROP TABLE IF EXISTS study_plans;
+SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE IF NOT EXISTS study_plans (
   id INT AUTO_INCREMENT PRIMARY KEY,
   plan_code CHAR(2) NOT NULL UNIQUE,
@@ -20,6 +25,8 @@ CREATE TABLE IF NOT EXISTS declared_plans (
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (plan_id) REFERENCES study_plans(id)
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE study_plans AUTO_INCREMENT = 1;
 
 INSERT INTO study_plans (plan_code, name_eng, name_th) VALUES
 ('FE', 'Frontend Developer', 'นักพัฒนาฟรอนเอนด์'),
