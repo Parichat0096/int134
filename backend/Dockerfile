@@ -4,12 +4,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-
-ENV DB_HOST=db
-ENV DB_USER=root
-ENV DB_PASSWORD=pl1password
-ENV DB_NAME=mydb
-ENV DB_PORT=3306
 ENV LANG=C.UTF-8
 
 EXPOSE 3000
