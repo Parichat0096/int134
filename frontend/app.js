@@ -2,9 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchStudyPlans();
 });
 
-async function fetchStudyPlans() {
-  const API_URL = '/intproj25/PL-1/itb-ecors/api/v1/study-plans';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_HOST = isLocal ? 'http://localhost:3000' : '';
+const API_PATH = '/intproj25/PL-1/itb-ecors/api/v1/study-plans';
+const API_URL = API_HOST + API_PATH;
 
+async function fetchStudyPlans() {
   const tableBody = document.getElementById('planBody');
   if (!tableBody) return;
 
@@ -38,19 +41,15 @@ function renderPlanTable(plans) {
   });
 }
 
-
 function showErrorDialog() {
-  // remove any existing dialog
   document.querySelectorAll('dialog.ecors-dialog').forEach(d => d.remove());
 
   const dialog = document.createElement('dialog');
   dialog.classList.add('ecors-dialog');
   dialog.setAttribute('closedby', 'none');
-  dialog.innerHTML = `
-    <div class="ecors-dialog-message">
-      There is a problem. Please try again later.
-    </div>
-  `;
+ dialog.innerHTML = `<div class="ecors-dialog-message">There is a problem. Please try again later.</div>`;
+  dialog.addEventListener('cancel', event => event.preventDefault());
+
   document.body.appendChild(dialog);
   dialog.showModal();
 }
