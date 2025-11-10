@@ -15,7 +15,7 @@ async function fetchStudyPlans() {
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const result = await res.json();
-    renderPlanTable(result.data);
+    renderPlanTable(result);
   } catch (err) {
     console.error('Fetch error:', err);
     showErrorDialog();
