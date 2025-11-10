@@ -165,22 +165,23 @@ dialog.ecors-dialog {
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 28px;
+  gap: 20px;
 }
 .nav-links a {
-  color: #0b3b66;
+  color:#0b4a8b;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.25s ease;
-  padding: 6px 10px;
-  border-radius: 8px;
+  font-weight:500;
 }
 .nav-links a:hover {
-  background: rgba(11, 99, 198, 0.08);
-  color: #0b63c6;
-  backdrop-filter: blur(4px);
+  text-shadow: 0 0 10px #589ff5, 0 0 20px #ead8f9;
+  transition: 0.3s;
 }
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+
 
 @media (max-width: 720px) {
   .glass-navbar {
@@ -192,5 +193,31 @@ dialog.ecors-dialog {
     gap: 14px;
     flex-wrap: wrap;
     justify-content: center;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  .glass-navbar {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 5px;
+  }
+
+  .nav-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .nav-logo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
 }
