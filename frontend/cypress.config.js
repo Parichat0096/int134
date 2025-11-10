@@ -1,11 +1,17 @@
 const { defineConfig } = require('cypress')
 module.exports = defineConfig({
     e2e:{
-        // baseUrl : "http://bscit.sit.kmutt.ac.th/intproj25/PL-1/itb-ecors/",
-        baseUrl : "http://ip25pl1.sit.kmutt.ac.th/intproj25/PL-1/itb-ecors/",
+        // 1. Frontend ของคุณ (ทำงานบน Port 80)
+        baseUrl : "http://localhost/intproj25/PL-1/itb-ecors/",
         
-        // baseAPI :"http://bscit.sit.kmutt.ac.th:3000/intproj25/PL-1/itb-ecors/api/v1/study-plans",
-        baseAPI :"http://ip25pl1.sit.kmutt.ac.th:3000/intproj25/PL-1/itb-ecors/api/v1/study-plans",
+        // --- VVVV แก้ไขบรรทัดนี้ VVVV ---
+        
+        // 2. Backend ของคุณ (ทำงานบน Port 3000)
+        //    (ลบ /study-plans ออกจากท้าย)
+        baseAPI :"http://localhost:3000/intproj25/PL-1/itb-ecors/api/v1",
+
+        // --- ^^^^ แก้ไขบรรทัดนี้ ^^^^ ---
+
         specPattern : "cypress/e2e/**/*.cy.js",
         setupNodeEvents(on , config){
 
