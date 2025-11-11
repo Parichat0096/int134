@@ -38,3 +38,12 @@ INSERT INTO study_plans (plan_code, name_eng, name_th) VALUES
 ('DE', 'Data Engineer', 'วิศวกรข้อมูล'),
 ('DB', 'Database Administrator', 'ผู้ดูแลฐานข้อมูล'),
 ('UX', 'UX/UI Designer', 'นักออกแบบประสบการณ์ของผู้ใช้และส่วนต่อประสาน');
+
+INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
+('67130500140', 3, '2025-11-11 00:18:19', '2025-11-11 00:18:19');
+
+INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
+('67130500143', 9, '2025-11-10 23:00:00', '2025-11-10 23:00:00'); 
+ 
+INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
+('67130500173', 1, '2025-11-11 01:09:08', '2025-11-11 01:09:08');
