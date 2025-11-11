@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.8'
 
 services:
   db:
@@ -11,21 +11,18 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "3307:3306"
+    restart: unless-stopped
 
   backend:
     build: ./backend
     container_name: tester_backend
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      DB_PORT: ${DB_PORT}
-      TEAM_CODE: ${TEAM_CODE}
+    env_file:
+      - .env
     depends_on:
       - db
     ports:
       - "3000:3000"
+    restart: unless-stopped
 
   frontend:
     build: ./frontend
@@ -34,3 +31,4 @@ services:
       - "80:80"
     depends_on:
       - backend
+    restart: unless-stopped

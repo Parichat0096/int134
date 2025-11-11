@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const API_HOST = isLocal ? 'http://localhost:3000' : '';
-const API_PATH = '/intproj25/PL-1/itb-ecors/api/v1/study-plans';
+const API_PATH = '/intproj25/pl1/itb-ecors/api/v1/study-plans';
 const API_URL = API_HOST + API_PATH;
 
 async function fetchStudyPlans() {
