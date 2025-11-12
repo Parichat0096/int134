@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./reserve_style.css">
+  </head>
+  <body>
+    <nav class="glass-navbar">
+      <div class="nav-logo">
+         <img src="./images/SIT LOGO White.png" alt="SITlogo">
+         <span>Study Plan Declaration and Course Reservation<span>
+      </div>
+     
+      <div class="nav-links" >
+        <p id="ecors-fullname"></p>
+        <button >Sign Out</button>
+      </div>
+    </nav>
+
+    <div class="Declara-Status">
+      <p>Declara Status :</p>
+      <p id="ecors-declared-plan"></p>
+    </div>
+
+    <div class="Declare-box">
+      <h3>Declare Your Major</h3>
+      <p>select your major</p>
+      <select id="ecors-dropdown-plan">
+        <option value="">-- Select a study plan --</option>
+      </select>
+      <button id="ecors-button-declare" disabled>Declare</button>
+    </div>
+  </body>
+  
+ 
+  <script type="module" src="app.js"></script>
+</html>

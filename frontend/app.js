@@ -53,3 +53,85 @@ function showErrorDialog() {
   document.body.appendChild(dialog);
   dialog.showModal();
 }
+
+
+///////////////reserve page////////////////////////////
+
+//declare status
+
+const declaredPlanEl = document.getElementById("ecors-declared-plan");
+const studentId = window.sessionStorage.getItem("studentId"); // สมมติเก็บไว้ตอน login
+
+async function loadDeclaredPlan() {
+  try {
+    const res = await fetch(`${apiBaseUrl}/students/${studentId}/declared-plan`);
+    if (!res.ok) throw new Error("DECLARED_PLAN_NOT_FOUND");
+
+    const data = await res.json();
+
+    if (data && data.planId) {
+      declaredPlanEl.textContent = `${data.planCode} - ${data.planNameEng}`;
+    } else {
+      declaredPlanEl.textContent = "Not declared plan";
+    }
+  } catch (err) {
+    console.error(err);
+    declaredPlanEl.textContent = "Not declared plan";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadDeclaredPlan);
+
+
+
+// dropdown
+const apiBaseUrl = isLocal ? 'http://localhost:3000/intproj25/pl1/itb-ecors/api/v1' : '/intproj25/pl1/itb-ecors/api/v1';
+
+const dropdown = document.getElementById("ecors-dropdown-plan");
+const declareBtn = document.getElementById("ecors-button-declare");
+
+// major 
+async function loadStudyPlans() {
+  try {
+    const response = await fetch(`${apiBaseUrl}/study-plans`);
+    if (!response.ok) throw new Error("Failed to fetch study plans");
+
+    const plans = await response.json();
+
+    dropdown.innerHTML = '<option value="">-- Select a study plan --</option>';
+
+    plans.forEach(plan => {
+      const option = document.createElement("option");
+      option.value = plan.id;              
+      option.textContent = `${plan.planCode} - ${plan.nameEng}`; 
+      dropdown.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error("Error loading study plans:", error);
+    alert("Cannot load study plans. Please try again later.");
+  }
+}
+
+dropdown.addEventListener("change", () => {
+  declareBtn.disabled = dropdown.value === "";
+});
+
+document.addEventListener("DOMContentLoaded", loadStudyPlans);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
