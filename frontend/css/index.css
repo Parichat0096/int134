@@ -176,6 +176,17 @@ dialog.ecors-dialog {
   text-shadow: 0 0 10px #589ff5, 0 0 20px #ead8f9;
   transition: 0.3s;
 }
+nav button {
+  background: rgba(255, 255, 255, 0.18);
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #fff;
+  cursor: pointer;
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(11, 76, 139, 0.08);
+}
 
 .no-wrap {
   white-space: nowrap;
