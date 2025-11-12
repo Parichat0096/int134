@@ -1,0 +1,139 @@
+/* Reset & Font */
+
+
+body {
+  font-family: 'Poppins', 'Prompt', sans-serif;
+  background: linear-gradient(135deg, #8EC5FC 0%, #E0C3FC 100%);
+  color: #333;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.glass-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 28px;
+  margin: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 20px rgba(11, 76, 139, 0.08);
+  border-radius: 14px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #0b4a8b;
+}
+.nav-logo img {
+  height: 34px;
+  width: auto;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+.nav-links a {
+  color:#0b4a8b;
+  text-decoration: none;
+  font-weight:500;
+}
+.nav-links a:hover {
+  text-shadow: 0 0 10px #589ff5, 0 0 20px #ead8f9;
+  transition: 0.3s;
+}
+
+.Declara-Status{
+    display: flex;
+    gap: 5px;
+    margin-left: 20px;
+    color:#0b4a8b;
+    font-weight: 500;
+}
+
+
+
+.Declare-box{
+  max-width: 700px;
+  margin: 50px auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 35px 40px;
+  animation: fadeIn 0.4s ease-in-out;
+
+}
+
+h2 {
+  color: #003366;
+  font-size: 1rem;
+  border-bottom: 2px solid #e0e4ef;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+tr:hover {
+  background: #f9fbff;
+  transition: 0.2s;
+}
+
+
+
+
+@media (max-width: 480px) {
+
+  /* Navbar */
+  .glass-navbar {
+    flex-direction: column;       /* เรียงแนวตั้ง */
+    align-items: flex-start;
+    padding: 8px 12px;
+  }
+
+  .nav-logo {
+    font-size: 0.9rem;
+    gap: 5px;
+  }
+
+  .nav-logo img {
+    height: 24px;                /* ลดขนาดโลโก้ */
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a, .nav-links button {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+  }
+
+
+  /* Declare Box */
+  .Declare-box {
+    margin: 15px 8px;           /* ลดขอบด้านข้าง */
+    padding: 15px 12px;         /* ลด padding */
+  }
+
+  .Declare-box h3 {
+    font-size: 0.95rem;         /* ลดขนาดหัวข้อ */
+  }
+
+  .Declare-box select, .Declare-box button {
+    font-size: 0.85rem;
+    padding: 6px;               /* ลด padding */
+  }
+}
