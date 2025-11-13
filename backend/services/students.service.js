@@ -33,14 +33,16 @@ const findDeclaredPlan = async (studentId) => {
 };
 
 const createDeclaration = async (studentId, planId) => {
-    const existingPlan = await studentsRepository.findDeclaredPlanByStudentId(studentId);
-    if (existingPlan) {
-        throw new Error('ALREADY_DECLARED');
-    }
+  const existingPlan = await studentsRepository.findDeclaredPlanByStudentId(studentId);
+  if (existingPlan) {
+    throw new Error('ALREADY_DECLARED');
+  }
 
-    const newPlanRow = await studentsRepository.create(studentId, planId);
-    
-    return mapDeclarationForApiResponse(newPlanRow);
+  const newPlanRow = await studentsRepository.create(studentId, planId);
+
+  const declaredPlanRow = await studentsRepository.findDeclaredPlanByStudentId(studentId);
+
+  return mapDeclaredPlanToDto(declaredPlanRow);
 };
 
 module.exports = {
