@@ -37,18 +37,25 @@ if (declaredPlanEl) {
 
 // user
 function setupUser(kc) {
-    console.log(kc);
+  console.log(kc);
   studentId = kc.tokenParsed.preferred_username;
   authToken = kc.token;
   fullNameEl.textContent = `${kc.tokenParsed.name}`;
 
 
   signOutBtn.addEventListener('click', () => {
-    const logoutUrl = new URL(kc.endpoints.logout());
-    logoutUrl.searchParams.append('post_logout_redirect_uri', `${window.location.origin}/intproj25/pl1/itb-ecors/`);
+   studentId = null;
+    authToken = null;
+    fullNameEl.textContent = '';
+
+     if (declareSectionEl) declareSectionEl.style.display = 'none';
+    if (declaredPlanEl) declaredPlanEl.textContent = 'You have been logged out.';
+
+    // const logoutUrl = new URL(kc.endpoints.logout());
+    // logoutUrl.searchParams.append('post_logout_redirect_uri', `${window.location.origin}/intproj25/pl1/itb-ecors/`);
     // 3. Add the client_id
-    logoutUrl.searchParams.append('client_id', kc.clientId);
-    window.location.href = logoutUrl.href;
+    // logoutUrl.searchParams.append('client_id', kc.clientId);
+    // window.location.href = logoutUrl.href;
   });
 
   dropdown.addEventListener("change", () => {
@@ -83,7 +90,7 @@ async function fetchDeclarationStatus() {
 
 // ======================= RENDER STATUS =======================
 function renderDeclared(data) {
-  const date = new Date(data.updatedAt); // แก้ชื่อฟิลด์
+  const date = new Date(data.updatedAt); 
   const formattedDate = date.toLocaleString('en-GB', {
     day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit', second: '2-digit',

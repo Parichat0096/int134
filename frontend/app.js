@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const manageButton = document.getElementById('ecors-button-manage');
   if (manageButton) {
     manageButton.addEventListener('click', () => {
-      window.location.href = 'reserve.html'; // [cite: 36]
+      window.location.href = 'reserve.html'; 
     });
   }
 });
@@ -25,13 +25,13 @@ async function fetchStudyPlans() {
 
   try {
     const res = await fetch(API_URL_index);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`); // [cite: 14]
+    if (!res.ok) throw new Error(`HTTP ${res.status}`); 
 
     const result = await res.json();
     renderPlanTable(result);
   } catch (err) {
     console.error('Fetch error:', err);
-    showErrorDialog("There is a problem. Please try again later."); // [cite: 14, 52]
+    showErrorDialog("There is a problem. Please try again later."); 
   }
 }
 
@@ -40,12 +40,12 @@ function renderPlanTable(plans) {
   const tableBody = document.getElementById('planBody');
   tableBody.innerHTML = '';
 
-  if (!plans || plans.length === 0) { // [cite: 14]
+  if (!plans || plans.length === 0) {
     tableBody.innerHTML = '<tr><td colspan="4">No study plans found.</td></tr>';
     return;
   }
 
-  plans.forEach(plan => { // [cite: 14]
+  plans.forEach(plan => { 
     const tr = document.createElement('tr');
     tr.classList.add('ecors-row');
     // Note: Assuming your API returns 'planCode', 'nameEng', 'nameTh'
@@ -65,10 +65,10 @@ function showErrorDialog(message) {
 
   const dialog = document.createElement('dialog');
   dialog.classList.add('ecors-dialog');
+  dialog.setAttribute('closedby', 'none');
   dialog.innerHTML = `
     <div class="ecors-dialog-message">${message}</div>
     <form method="dialog">
-      <button id="ecors-button-dialog">OK</button>
     </form>
   `;
 

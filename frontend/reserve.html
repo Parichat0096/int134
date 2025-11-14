@@ -12,13 +12,16 @@
         #declare-section { display: none; }
         #ecors-dialog { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid black; background: white; padding: 20px; z-index: 100; }
         #dialog-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; }
-    
+        a:hover{
+            scale: 1.2;
+            transition: 0.8;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <span>Study Plan Declaration and Course Reservation</span>
+        <a href="index.html" style="color: white; text-decoration: none;"><span>Study Plan Declaration and Course Reservation</span></a>
         <div>
             <span id="ecors-fullname">Welcome...</span>
             <button id="ecors-button-signout">Sign Out</button>
