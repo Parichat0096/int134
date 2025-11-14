@@ -40,7 +40,7 @@ INSERT INTO study_plans (plan_code, name_eng, name_th) VALUES
 ('UX', 'UX/UI Designer', 'นักออกแบบประสบการณ์ของผู้ใช้และส่วนต่อประสาน');
 
 INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
-('67130500140', 3, '2025-11-10 14:15:16', '2025-11-10 14:15:16');
+('67130500140', 3, '2025-11-10 14:15:16', '2025-11-10 17:18:19');
 
 INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
 ('67130500143', 9, '2025-11-10 23:00:00', '2025-11-10 23:00:00'); 
