@@ -23,29 +23,29 @@
     <header>
         <a href="index.html" style="color: white; text-decoration: none;"><span>Study Plan Declaration and Course Reservation</span></a>
         <div>
-            <span id="ecors-fullname">Welcome...</span>
-            <button id="ecors-button-signout">Sign Out</button>
+            <span class="ecors-fullname">Welcome...</span>
+            <button class="ecors-button-signout">Sign Out</button>
         </div>
     </header>
 
     <hr>
 
     <h2>Declaration Status</h2>
-    <div id="ecors-declared-plan">Loading...</div>
+    <div class="ecors-declared-plan">Loading...</div>
 
-    <div id="declare-section">
+    <div class="declare-section">
         <h3>Declare Your Major</h3>
         <label for="ecors-dropdown-plan">Select Major:</label>
-        <select id="ecors-dropdown-plan">
+        <select class="ecors-dropdown-plan">
             </select>
         
-        <button id="ecors-button-declare" disabled>Declare</button>
+        <button class="ecors-button-declare" disabled>Declare</button>
     </div>
 
-    <div id="dialog-backdrop"></div>
-    <div id="ecors-dialog">
-        <p id="ecors-dialog-message"></p>
-        <button id="ecors-button-dialog">Ok</button>
+    <div class="dialog-backdrop"></div>
+    <div class="ecors-dialog">
+        <p class="ecors-dialog-message"></p>
+        <button class="ecors-button-dialog">Ok</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/keycloak-js@24.0.0/dist/keycloak.min.js"></script>

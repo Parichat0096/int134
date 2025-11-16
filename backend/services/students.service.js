@@ -1,18 +1,20 @@
 const studentsRepository = require('../repositories/students.repository');
 
-// Format timestamp without changing timezone (MySQL DATETIME → ISO-like)
-const formatDate = (d) => {
-    const pad = (n) => n.toString().padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
-        + `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.000Z`;
-};
+// Format timestamp without changing timezone
+// const formatDate = (d) => {
+//     const pad = (n) => n.toString().padStart(2, '0');
+//     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+//         + `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.000Z`;
+// };
 
 const mapDeclarationForApiResponse = (dbRow) => {
     return {
         studentId: dbRow.student_id,
         planId: dbRow.plan_id,
-        createdAt: formatDate(dbRow.created_at),
-        updatedAt: formatDate(dbRow.updated_at),
+        planCode: dbRow.plan_code,
+        planNameEng: dbRow.name_eng,
+        createdAt: dbRow.created_at,
+        updatedAt: dbRow.updated_at,
     };
 };
 
