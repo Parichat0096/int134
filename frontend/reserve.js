@@ -45,7 +45,7 @@ function setupUser(kc) {
   authToken = kc.token;
   fullNameEl.textContent = `${kc.tokenParsed.name}`;
 
-  signOutBtn.addEventListener("click", () => {
+ signOutBtn.addEventListener("click", () => {
     studentId = null;
     authToken = null;
     fullNameEl.textContent = "";
@@ -53,12 +53,7 @@ function setupUser(kc) {
     if (declareSectionEl) declareSectionEl.style.display = "none";
     if (declaredPlanEl)
       declaredPlanEl.textContent = "You have been logged out.";
-    const logoutUrl = new URL(kc.endpoints.logout());
-    logoutUrl.searchParams.append(
-      "post_logout_redirect_uri",
-      `${window.location.origin}/intproj25/pl1/itb-ecors/`
-    );
-    window.location.href = logoutUrl.href;
+    window.location.href = `${window.location.origin}/intproj25/pl1/itb-ecors/`;
   });
 
   dropdown.addEventListener("change", () => {
@@ -195,7 +190,7 @@ function showDialog_reserve(message, type = "error") {
 
   const closeHandler = () => {
     dialog.close();
-    document.body.removeChild(dialog); // (TC-PBI4-3) If 409, refresh status after closing dialog
+    document.body.removeChild(dialog); 
     if (
       type === "conflict" &&
       !document.querySelector(

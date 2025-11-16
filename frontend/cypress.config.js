@@ -1,4 +1,6 @@
 const { defineConfig } = require('cypress')
+
+
 module.exports = defineConfig({
     e2e:{
         // 1. Frontend ทำงานบน Port 80
@@ -14,6 +16,6 @@ module.exports = defineConfig({
         setupNodeEvents(on , config){
 
         },
-        supportFile : false
+        supportFile: "./cypress/e2e/support/e2e.js",
     }
 })

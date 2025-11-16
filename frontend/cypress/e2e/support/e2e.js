@@ -1,1 +1,1 @@
-import 'cypress-plugin-timezone';
+import "./commands";
