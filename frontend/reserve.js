@@ -45,16 +45,12 @@ function setupUser(kc) {
   authToken = kc.token;
   fullNameEl.textContent = `${kc.tokenParsed.name}`;
 
- signOutBtn.addEventListener("click", () => {
-    studentId = null;
-    authToken = null;
-    fullNameEl.textContent = "";
-
-    if (declareSectionEl) declareSectionEl.style.display = "none";
-    if (declaredPlanEl)
-      declaredPlanEl.textContent = "You have been logged out.";
-    window.location.href = `${window.location.origin}/intproj25/pl1/itb-ecors/`;
+  signOutBtn.addEventListener("click", () => {
+    const homePageUrl = `${window.location.origin}/intproj25/pl1/itb-ecors/`;
+    keycloak.logout({ redirectUri: homePageUrl });
   });
+  // ==========================================================
+
 
   dropdown.addEventListener("change", () => {
     declareBtn.disabled = dropdown.value === "";
@@ -89,20 +85,20 @@ async function fetchDeclarationStatus() {
   }
 }
 
-//  RENDER STATUS
+//  RENDER STATUS
 function renderDeclared(data) {
   const date = new Date(data.updatedAt);
 
   const formattedDate = date.toLocaleString("en-GB", {
-    day:"2-digit", month:"2-digit", year:"numeric",
-    hour:"2-digit", minute:"2-digit", second:"2-digit",
-    hour12:false,
+    day: "2-digit", month: "2-digit", year: "numeric",
+    hour: "2-digit", minute: "2-digit", second: "2-digit",
+    hour12: false,
   });
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   declaredPlanEl.textContent =
-  `Declared ${data.planCode} - ${data.planNameEng} on ${formattedDate} (${timeZone})`;
+    `Declared ${data.planCode} - ${data.planNameEng} on ${formattedDate} (${timeZone})`;
 
 
   if (declareSectionEl) declareSectionEl.style.display = "none";
@@ -114,7 +110,7 @@ function renderNotDeclared() {
   loadStudyPlansForDropdown();
 }
 
-//  DECLARE LOGIC
+//  DECLARE LOGIC
 async function loadStudyPlansForDropdown() {
   try {
     const response = await fetch(`${apiBaseUrl}/study-plans`, {
@@ -175,7 +171,7 @@ async function handleDeclare() {
   }
 }
 
-//  DIALOG
+//  DIALOG
 function showDialog_reserve(message, type = "error") {
   document.querySelectorAll("dialog.ecors-dialog").forEach((d) => d.remove());
 
@@ -183,19 +179,17 @@ function showDialog_reserve(message, type = "error") {
   dialog.classList.add("ecors-dialog");
   dialog.innerHTML = `
     <div id="ecors-dialog-message" class="ecors-dialog-message">${message}</div>
-    <button id="ecors-button-dialog">Ok</button>
+    <button id="ecors-button-dialog" class="ecors-button-dialog">Ok</button>
   `;
   dialog.addEventListener("cancel", (e) => e.preventDefault());
   const okButton = dialog.querySelector("#ecors-button-dialog");
 
   const closeHandler = () => {
     dialog.close();
-    document.body.removeChild(dialog); 
+    document.body.removeChild(dialog);
     if (
       type === "conflict" &&
-      !document.querySelector(
-        '#ecors-dialog-message:contains("Could not load")'
-      )
+      !message.includes("Could not load") 
     ) {
       fetchDeclarationStatus();
     }

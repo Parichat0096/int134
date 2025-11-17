@@ -42,8 +42,8 @@ INSERT INTO study_plans (plan_code, name_eng, name_th) VALUES
 INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
 ('67130500140', 3, '2025-11-10 14:15:16', '2025-11-10 17:18:19');
 
-INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
-('67130500143', 9, '2025-11-10 23:00:00', '2025-11-10 23:00:00'); 
+-- -- INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
+-- -- ('67130500143', 9, '2025-11-10 23:00:00', '2025-11-10 23:00:00'); 
  
-INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
-('67130500173', 1, '2025-11-11 01:09:08', '2025-11-11 01:09:08');
+-- INSERT INTO declared_plans (student_id, plan_id, created_at, updated_at) VALUES
+-- ('67130500173', 1, '2025-11-11 01:09:08', '2025-11-11 01:09:08');
