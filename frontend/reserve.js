@@ -1,9 +1,8 @@
 const isLocal_reserve =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
-const API_HOST_reserve = isLocal_reserve ? "http://localhost:3000" : "";
+const API_HOST_reserve = isLocal_reserve ? "https://localhost" : "";
 const apiBaseUrl = `${API_HOST_reserve}/intproj25/pl1/itb-ecors/api/v1`;
-
 const declaredPlanEl = document.querySelector(".ecors-declared-plan");
 const declareSectionEl = document.querySelector(".declare-section");
 const dropdown = document.querySelector(".ecors-dropdown-plan");

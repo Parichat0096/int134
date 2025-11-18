@@ -1,0 +1,21 @@
+[ req ]
+# Points to the section containing the subject (DN) details
+distinguished_name = req_distinguished_name
+prompt = no
+# IMPORTANT: Defines the extensions section for self-signed (x509) certificates
+x509_extensions = v3_ca 
+
+[ req_distinguished_name ]
+# Subject Name Details
+C = TH
+ST = Bangkok
+L = Bangkok
+O = SIT
+OU = IT
+CN = itb-ecors
+
+[ v3_ca ]
+# Basic Constraints for a self-signed certificate
+basicConstraints = CA:true
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment, keyCertSign
+subjectKeyIdentifier = hash

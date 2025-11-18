@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   db:
     image: mysql:8.0
@@ -29,6 +28,12 @@ services:
     container_name: tester_frontend
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      # 1. Mount SSL Certs (อย่าลืมสร้างไฟล์)
+      - ./nginx/certs:/etc/nginx/certs:ro
+      # 2. Mount Config (เพื่อให้ Docker อ่าน config ใหม่)
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro 
     depends_on:
       - backend
     restart: unless-stopped
