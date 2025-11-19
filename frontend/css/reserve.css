@@ -26,28 +26,16 @@ body {
   border-radius: 14px;
 }
 
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: #0b4a8b;
+
+.glass-navbar h2{
+  margin: 0;
+  padding-bottom: 0;
 }
-.nav-logo img {
-  height: 34px;
-  width: auto;
+
+.glass-navbar span{
+  margin-right: 10px;
 }
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-.nav-links a {
-  color:#0b4a8b;
-  text-decoration: none;
-  font-weight:500;
-}
+
 .nav-links a:hover {
   text-shadow: 0 0 10px #589ff5, 0 0 20px #ead8f9;
   transition: 0.3s;
@@ -60,10 +48,22 @@ body {
     color:#0b4a8b;
     font-weight: 500;
 }
+.Declara-Status h2{
+  align-self: center;
+  margin: 10px;
+  padding-bottom: 0;
+}
+.ecors-declared-plan{
+  align-self: center;
+}
+
+.ecors-dropdown-plan{
+  width: auto;
+  min-width: 300px;   /* กัน dropdown ไม่แคบเกินไป */
+}
 
 
-
-.Declare-box{
+.declare-section{
   max-width: 700px;
   margin: 50px auto;
   background: white;
@@ -77,7 +77,6 @@ body {
 h2 {
   color: #003366;
   font-size: 1rem;
-  border-bottom: 2px solid #e0e4ef;
   padding-bottom: 8px;
   margin-bottom: 20px;
 }
@@ -120,7 +119,6 @@ tr:hover {
     font-size: 0.85rem;
     padding: 4px 8px;
   }
-
 
 
   .Declare-box {
