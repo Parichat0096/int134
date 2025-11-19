@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS declared_plans (
 ALTER TABLE study_plans AUTO_INCREMENT = 1;
 ALTER TABLE declared_plans
 ADD COLUMN status ENUM('DECLARED', 'CANCELLED') NOT NULL DEFAULT 'DECLARED';
+
 INSERT INTO study_plans (plan_code, name_eng, name_th) VALUES
 ('FE', 'Frontend Developer', 'นักพัฒนาฟรอนเอนด์'),
 ('BE', 'Backend Developer', 'นักพัฒนาแบ็กเอนด์'),
