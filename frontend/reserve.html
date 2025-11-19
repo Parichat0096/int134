@@ -4,34 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Declaration - ITB-ECORS</title>
-    <link rel="stylesheet" href="./css/index.css">
-    <style>
-      
-        body { font-family: sans-serif; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; }
-        #declare-section { display: none; }
-        #ecors-dialog { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px solid black; background: white; padding: 20px; z-index: 100; }
-        #dialog-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; }
-        a:hover{
-            scale: 1.2;
-            transition: 0.8;
-        }
-    </style>
+    <link rel="stylesheet" href="./css/reserve.css">
+
 </head>
 <body>
 
-    <header>
-        <a href="index.html" style="color: white; text-decoration: none;"><span>Study Plan Declaration and Course Reservation</span></a>
+    <nav class="glass-navbar" >
+        <h2>Study Plan Declaration and Course Reservation</h2>
         <div>
             <span class="ecors-fullname">Welcome...</span>
             <button class="ecors-button-signout">Sign Out</button>
         </div>
-    </header>
+    </nav>
 
-    <hr>
-
-    <h2>Declaration Status</h2>
-    <div class="ecors-declared-plan">Loading...</div>
+    <div class="Declara-Status">
+       <h2>Declaration Status</h2>
+       <div class="ecors-declared-plan">Loading...</div>
+    </div>
 
     <div class="declare-section">
         <h3>Declare Your Major</h3>
