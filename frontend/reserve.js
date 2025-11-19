@@ -1,7 +1,9 @@
 const isLocal_reserve =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
-const API_HOST_reserve = isLocal_reserve ? "https://localhost" : "";
+const API_HOST_reserve = isLocal_reserve
+  ? `${window.location.protocol}//${window.location.hostname}`
+  : `${window.location.origin}`;
 const apiBaseUrl = `${API_HOST_reserve}/intproj25/pl1/itb-ecors/api/v1`;
 const declaredPlanEl = document.querySelector(".ecors-declared-plan");
 const declareSectionEl = document.querySelector(".declare-section");
