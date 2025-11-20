@@ -297,6 +297,70 @@ changeBtn.addEventListener("click", async () => {
 
 // ==================== CANCEL (DELETE) ====================
 
+// listen on trigger button (outside dialog)
+cancelBtn.addEventListener("click", () => {
+  // ใช้ updatedAt ที่ backend ส่งมา
+  const date = new Date(currentUpdatedAt || Date.now());
+  
+  // Format ตาม requirement: DD/MM/YYYY HH:mm:ss
+  const formatted = date.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  });
+
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  dialogConfirmMsg.textContent =
+    `You have declared ${currentPlanCode} - ${currentPlanNameEng} as your plan on ${formatted} (${tz}). ` +
+    `Are you sure you want to cancel this declaration?`;
+
+  dialogConfirm.showModal();
+});
+
+
+dialogConfirmCancelBtn.addEventListener("click", confirmCancel);
+dialogConfirmKeepBtn.addEventListener("click", () => dialogConfirm.close());
+
+async function confirmCancel() {
+  dialogConfirm.close();
+
+  try {
+    const res = await fetch(`${apiBaseUrl}/students/${studentId}/declared-plan`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+
+    if (res.status === 200) {
+      const data = await res.json();
+      renderDeclared(data);
+      showDialog("Declaration cancelled.");
+    } else if (res.status === 204) {
+      const cancelledData = {
+        status: "CANCELLED",
+        planId: currentPlanId,
+        planCode: currentPlanCode,
+        planNameEng: currentPlanNameEng,
+        updatedAt: new Date().toISOString(),
+      };
+      renderDeclared(cancelledData);
+      showDialog("Declaration cancelled.");
+    } else if (res.status === 404) {
+      showDialog("No declared plan found for student.");
+    } else if (res.status === 409) {
+      showDialog("Cannot cancel the declared plan because it is already cancelled.");
+    } else {
+      throw new Error(`HTTP ${res.status}`);
+    }
+  } catch (err) {
+    showDialog("There is a problem. Try again.");
+  }
+}
+
 // ==================== DIALOG ====================
 function showDialog(msg) {
   dialogOkMsg.textContent = msg;
