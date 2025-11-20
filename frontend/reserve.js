@@ -1,76 +1,97 @@
+// reserve.js
+// ==================== CONFIG ====================
 const isLocal_reserve =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
-const API_HOST_reserve = isLocal_reserve
+
+//const API_HOST_reserve = isLocal_reserve
+// ? "http://localhost:3000"
+ // : "https://bscit.sit.kmutt.ac.th";
+ const API_HOST_reserve = isLocal_reserve
   ? `${window.location.protocol}//${window.location.hostname}`
   : `${window.location.origin}`;
-const apiBaseUrl = `${API_HOST_reserve}/intproj25/pl1/itb-ecors/api/v1`;
+
+
+const TEAM_CODE = "pl1";
+const apiBaseUrl = `${API_HOST_reserve}/intproj25/${TEAM_CODE}/itb-ecors/api/v1`;
+
+// ==================== ELEMENTS ====================
 const declaredPlanEl = document.querySelector(".ecors-declared-plan");
-const declareSectionEl = document.querySelector(".declare-section");
-const dropdown = document.querySelector(".ecors-dropdown-plan");
-const declareBtn = document.querySelector(".ecors-button-declare");
 const fullNameEl = document.querySelector(".ecors-fullname");
 const signOutBtn = document.querySelector(".ecors-button-signout");
 
+const declareSectionEl = document.querySelector(".declare-section");
+const declareDropdown = document.querySelector(".ecors-dropdown-plan");
+const declareBtn = document.querySelector(".ecors-button-declare");
+
+// changed selector for the change dropdown to avoid ambiguity with declare dropdown
+const changeSectionEl = document.querySelector(".change-section");
+const changeDropdown = document.querySelector(".ecors-dropdown-plan-change");
+const changeBtn = document.querySelector(".ecors-button-change");
+
+const cancelSectionEl = document.querySelector(".cancel-section");
+// trigger button (outside dialog) has its own distinct class now
+const cancelBtn = document.querySelector(".ecors-button-cancel-trigger");
+
+// dialogs
+const dialogs = document.querySelectorAll(".ecors-dialog");
+const dialogOk = dialogs[0];
+const dialogConfirm = dialogs[1];
+
+const dialogOkMsg = dialogOk.querySelector(".ecors-dialog-message");
+const dialogOkBtn = dialogOk.querySelector(".ecors-button-dialog");
+
+const dialogConfirmMsg = dialogConfirm.querySelector(".ecors-dialog-message");
+// dialogConfirm has its own .ecors-button-cancel inside the dialog
+const dialogConfirmCancelBtn = dialogConfirm.querySelector(".ecors-button-cancel");
+const dialogConfirmKeepBtn = dialogConfirm.querySelector(".ecors-button-keep");
+
+const planListForCypress = document.querySelector(".ecors-plan-list");
+
+// ==================== VARIABLES ====================
 let studentId = null;
 let authToken = null;
 
-// --- Keycloak Init ---
-const keycloakConfig = {
-  url: "https://bscit.sit.kmutt.ac.th/intproj25/ft/keycloak/",
+let currentStatus = null;
+let currentPlanId = null;
+let currentPlanCode = null;
+let currentPlanNameEng = null;
+let currentUpdatedAt = null;
+
+// ==================== KEYCLOAK ====================
+// ตามคำขอของคุณ: ไม่แก้ค่า Keycloak URL / clientId
+const keycloak = new Keycloak({
+  url: `https://bscit.sit.kmutt.ac.th/intproj25/ft/keycloak/`,
   realm: "itb-ecors",
   clientId: "itb-ecors-pl1",
-};
+});
 
-const keycloak = new Keycloak(keycloakConfig);
+keycloak
+  .init({ onLoad: "login-required", checkLoginIframe: false })
+  .then((auth) => {
+    if (!auth) return;
 
-if (declaredPlanEl) {
-  keycloak
-    .init({ onLoad: "login-required", checkLoginIframe: false })
-    .then((authenticated) => {
-      if (authenticated) {
-        setupUser(keycloak);
-        fetchDeclarationStatus();
-      }
-    })
-    .catch(() => {
-      console.error("Keycloak initialization failed");
-      declaredPlanEl.textContent = "Authentication failed.";
+    studentId = keycloak.tokenParsed.preferred_username;
+    authToken = keycloak.token;
+
+    fullNameEl.textContent = `Welcome, ${keycloak.tokenParsed.name}`;
+
+    signOutBtn.addEventListener("click", () => {
+      const home = `${window.location.origin}/intproj25/${TEAM_CODE}/itb-ecors/`;
+      keycloak.logout({ redirectUri: home });
     });
-}
 
-// user
-function setupUser(kc) {
-  console.log(kc);
-  studentId = kc.tokenParsed.preferred_username;
-  authToken = kc.token;
-  fullNameEl.textContent = `${kc.tokenParsed.name}`;
-
-  signOutBtn.addEventListener("click", () => {
-    const homePageUrl = `${window.location.origin}/intproj25/pl1/itb-ecors/`;
-    keycloak.logout({ redirectUri: homePageUrl });
-  });
-  // ==========================================================
-
-
-  dropdown.addEventListener("change", () => {
-    declareBtn.disabled = dropdown.value === "";
+    fetchDeclarationStatus();
   });
 
-  declareBtn.addEventListener("click", handleDeclare);
-}
+// ==================== FETCH STATUS ====================
 async function fetchDeclarationStatus() {
-  if (!studentId) return;
-
   declaredPlanEl.textContent = "Loading status...";
 
   try {
-    const res = await fetch(
-      `${apiBaseUrl}/students/${studentId}/declared-plan`,
-      {
-        headers: { Authorization: `Bearer ${authToken}` },
-      }
-    );
+    const res = await fetch(`${apiBaseUrl}/students/${studentId}/declared-plan`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
 
     if (res.status === 200) {
       const data = await res.json();
@@ -78,133 +99,208 @@ async function fetchDeclarationStatus() {
     } else if (res.status === 404) {
       renderNotDeclared();
     } else {
-      throw new Error(`HTTP ${res.status}`);
+      throw new Error();
     }
   } catch (err) {
-    console.error(err);
-    showDialog_reserve("Could not load declaration status. Please refresh.");
+    showDialog("Could not load declaration status. Please refresh.");
   }
 }
 
-//  RENDER STATUS
+// ==================== RENDER ====================
 function renderDeclared(data) {
-  const date = new Date(data.updatedAt);
+  currentStatus = data.status;
+  currentPlanId = data.planId;
+  currentPlanCode = data.planCode;
+  currentPlanNameEng = data.planNameEng;
+  currentUpdatedAt = data.updatedAt;
 
-  const formattedDate = date.toLocaleString("en-GB", {
-    day: "2-digit", month: "2-digit", year: "numeric",
-    hour: "2-digit", minute: "2-digit", second: "2-digit",
+  const date = new Date(data.updatedAt);
+  const formatted = date.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: false,
   });
 
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  declaredPlanEl.textContent =
-    `Declared ${data.planCode} - ${data.planNameEng} on ${formattedDate} (${timeZone})`;
+  // ================= CANCELLED =================
+  if (data.status === "CANCELLED") {
+    declaredPlanEl.textContent = `Declaration Status: Cancelled ${data.planCode} - ${data.planNameEng} plan on ${formatted} (${tz})`;
 
+    showDeclareSection();
+    hideChangeSection();
+    hideCancelSection();
 
-  if (declareSectionEl) declareSectionEl.style.display = "none";
+    declareDropdown.innerHTML = "<option value=''>-- Select Major --</option>";
+    declareBtn.disabled = true;
+    loadStudyPlans(declareDropdown);
+
+    return;
+  }
+
+  // ================= DECLARED =================
+  declaredPlanEl.textContent = `Declaration Status: Declared ${data.planCode} - ${data.planNameEng} on ${formatted} (${tz})`;
+
+  hideDeclareSection();
+  showChangeSection();
+  showCancelSection();
+
+  loadStudyPlans(changeDropdown, currentPlanId);
 }
 
 function renderNotDeclared() {
+  currentStatus = null;
+  currentPlanId = null;
+  currentPlanCode = null;
+  currentPlanNameEng = null;
+
   declaredPlanEl.textContent = "Declaration Status: Not Declared";
-  if (declareSectionEl) declareSectionEl.style.display = "block";
-  loadStudyPlansForDropdown();
+
+  showDeclareSection();
+  hideChangeSection();
+  hideCancelSection();
+
+  declareDropdown.innerHTML = "<option value=''>-- Select Major --</option>";
+  declareBtn.disabled = true;
+
+  loadStudyPlans(declareDropdown);
 }
 
-//  DECLARE LOGIC
-async function loadStudyPlansForDropdown() {
+// ==================== UI HELPERS ====================
+function showDeclareSection() {
+  declareSectionEl.style.display = "block";
+}
+function hideDeclareSection() {
+  declareSectionEl.style.display = "none";
+}
+
+function showChangeSection() {
+  changeSectionEl.style.display = "block";
+}
+function hideChangeSection() {
+  changeSectionEl.style.display = "none";
+}
+
+function showCancelSection() {
+  cancelSectionEl.style.display = "block";
+}
+function hideCancelSection() {
+  cancelSectionEl.style.display = "none";
+}
+
+// ==================== LOAD STUDY PLANS ====================
+async function loadStudyPlans(dropdown, selectedId = null) {
+  dropdown.innerHTML = "<option value=''>-- Select Major --</option>";
+  planListForCypress.innerHTML = "";
+
   try {
-    const response = await fetch(`${apiBaseUrl}/study-plans`, {
+    const res = await fetch(`${apiBaseUrl}/study-plans`, {
       headers: { Authorization: `Bearer ${authToken}` },
     });
-    if (!response.ok) throw new Error("Failed to fetch study plans");
 
-    const plans = await response.json();
-    dropdown.innerHTML = '<option value="">-- Select Major --</option>';
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const plans = await res.json();
 
-    plans.forEach((plan) => {
-      const option = document.createElement("option");
-      option.value = plan.id;
-      option.textContent = `${plan.planCode} - ${plan.nameEng}`;
-      option.classList.add("ecors-plan-row");
-      dropdown.appendChild(option);
+    plans.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = `${p.planCode} - ${p.nameEng}`;
+      if (selectedId && p.id === selectedId) opt.selected = true;
+      dropdown.appendChild(opt);
+
+      // สำหรับ Cypress
+      const row = document.createElement("div");
+      row.classList.add("ecors-plan-row");
+      row.innerHTML = `
+        <span class="ecors-plan-code">${p.planCode}</span>
+        <span class="ecors-plan-name">${p.nameEng}</span>
+      `;
+      planListForCypress.appendChild(row);
     });
-  } catch (error) {
-    console.error("Error loading study plans:", error);
-    showDialog_reserve("Cannot load study plans. Please try again later.");
+  } catch (err) {
+    showDialog("Cannot load study plans.");
   }
 }
 
-async function handleDeclare() {
-  const selectedPlanId = dropdown.value;
-  if (!selectedPlanId) return;
+// ==================== DECLARE (POST) ====================
+declareDropdown.addEventListener("change", () => {
+  declareBtn.disabled = declareDropdown.value === "";
+});
 
-  declareBtn.disabled = true;
+declareBtn.addEventListener("click", async () => {
+  const pid = parseInt(declareDropdown.value);
 
   try {
-    const res = await fetch(
-      `${apiBaseUrl}/students/${studentId}/declared-plan`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ planId: parseInt(selectedPlanId) }),
-      }
-    );
+    const res = await fetch(`${apiBaseUrl}/students/${studentId}/declared-plan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ planId: pid }),
+    });
 
     if (res.status === 201) {
       const data = await res.json();
       renderDeclared(data);
     } else if (res.status === 409) {
-      showDialog_reserve(
-        "You may have declared study plan already. Please check again.",
-        "conflict"
-      );
+      showDialog("You may have declared study plan already. Please check again.");
+      fetchDeclarationStatus();
     } else {
       throw new Error(`HTTP ${res.status}`);
     }
   } catch (err) {
-    console.error(err);
-    showDialog_reserve("There is a problem. Please try again later.");
-    declareBtn.disabled = false;
+    showDialog("There is a problem. Try again.");
   }
+});
+
+// ==================== CHANGE (PUT) ====================
+changeDropdown.addEventListener("change", () => {
+  changeBtn.disabled =
+    changeDropdown.value === "" ||
+    parseInt(changeDropdown.value) === currentPlanId;
+});
+
+changeBtn.addEventListener("click", async () => {
+  const newId = parseInt(changeDropdown.value);
+
+  try {
+    const res = await fetch(`${apiBaseUrl}/students/${studentId}/declared-plan`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ planId: newId }),
+    });
+
+    if (res.status === 200) {
+      const data = await res.json();
+      renderDeclared(data);
+    } else if (res.status === 404) {
+      showDialog("No declared plan found for student.");
+      renderNotDeclared();
+    } else if (res.status === 409) {
+      showDialog("Cannot update the declared plan because it has been cancelled.");
+    } else {
+      // generic fallback for unexpected responses
+      throw new Error(`HTTP ${res.status}`);
+    }
+  } catch (err) {
+    showDialog("There is a problem. Try again.");
+  }
+});
+
+// ==================== CANCEL (DELETE) ====================
+
+// ==================== DIALOG ====================
+function showDialog(msg) {
+  dialogOkMsg.textContent = msg;
+  dialogOk.showModal();
 }
 
-//  DIALOG
-function showDialog_reserve(message, type = "error") {
-  document.querySelectorAll("dialog.ecors-dialog").forEach((d) => d.remove());
-
-  const dialog = document.createElement("dialog");
-  dialog.classList.add("ecors-dialog");
-  dialog.innerHTML = `
-    <div id="ecors-dialog-message" class="ecors-dialog-message">${message}</div>
-    <button id="ecors-button-dialog" class="ecors-button-dialog">Ok</button>
-  `;
-  dialog.addEventListener("cancel", (e) => e.preventDefault());
-  const okButton = dialog.querySelector("#ecors-button-dialog");
-
-  const closeHandler = () => {
-    dialog.close();
-    document.body.removeChild(dialog);
-    if (
-      type === "conflict" &&
-      !message.includes("Could not load") 
-    ) {
-      fetchDeclarationStatus();
-    }
-  };
-
-  okButton.addEventListener("click", closeHandler);
-
-  dialog.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      closeHandler();
-    }
-  });
-
-  document.body.appendChild(dialog);
-  dialog.showModal();
-}
+dialogOkBtn.addEventListener("click", () => dialogOk.close());

@@ -3,22 +3,28 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="./css/index.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  a:hover{
-            scale: 1.02;
-            transition: 0.8;
-        }
-</style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    a:hover{
+      scale: 1.02;
+      transition: 0.8;
+    }
+  </style>
   <title>Study Plans</title>
 </head>
 <body>
   <nav class="glass-navbar">
     <div class="nav-logo">
       <img src="./images/SIT LOGO White.png" alt="SITlogo">
-     <a href="index.html"  style="color: white; text-decoration: none;"> <span>Study Plan declaration and course reservation</span></a>
+      <a href="index.html"  style="color: white; text-decoration: none;">
+        <span>Study Plan declaration and course reservation</span>
+      </a>
     </div>
-    <a href="reserve.html"><button class="ecors-button-manage" >Manage study plan declaration and course reservation</button></a>
+
+    <!-- ปุ่ม Manage ที่ Cypress ต้องใช้ -->
+    <button class="ecors-button-manage" onclick="location.href='reserve.html'">
+      Manage study plan declaration and course reservation
+    </button>
 
   </nav>
   
@@ -34,13 +40,12 @@
         </tr>
       </thead>
       <tbody id="planBody">
-        <tr><td colspan="4" class="no-data"></td></tr>
+        <tr><td colspan="4" class="no-data">Loading...</td></tr>
       </tbody>
     </table>
   </main>
 
-
- <script type="module" src="app.js"></script>
+  <script type="module" src="app.js"></script>
 
 </body>
 </html>
