@@ -86,7 +86,7 @@ Cypress.Commands.add('shouldBeVisibleAndClickable', selector => {
 
 Cypress.Commands.add('shouldShowDialog', (expectedMessage) => {
   cy.get('.ecors-dialog').should('be.visible');
-  cy.get('.ecors-dialog-message').first().should('have.text', expectedMessage);
+  cy.get('.ecors-dialog-message').should('have.text', expectedMessage);
 });
 
 Cypress.Commands.add('shouldCloseDialog', () => {
