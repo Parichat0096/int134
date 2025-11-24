@@ -4,10 +4,7 @@ const isLocal_reserve =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
 
-//const API_HOST_reserve = isLocal_reserve
-// ? "http://localhost:3000"
- // : "https://bscit.sit.kmutt.ac.th";
- const API_HOST_reserve = isLocal_reserve
+const API_HOST_reserve = isLocal_reserve
   ? `${window.location.protocol}//${window.location.hostname}`
   : `${window.location.origin}`;
 
@@ -24,13 +21,15 @@ const declareSectionEl = document.querySelector(".declare-section");
 const declareDropdown = document.querySelector(".ecors-dropdown-plan");
 const declareBtn = document.querySelector(".ecors-button-declare");
 
-// changed selector for the change dropdown to avoid ambiguity with declare dropdown
 const changeSectionEl = document.querySelector(".change-section");
-const changeDropdown = document.querySelector(".ecors-dropdown-plan-change");
+
+// ⭐⭐⭐ แก้ไขตรงนี้ (สำคัญมาก) ⭐⭐⭐
+// ต้องชี้ไปที่ .ecors-dropdown-plan-change เพื่อให้ข้อมูลลงถูกช่องในหน้า HTML
+const changeDropdown = document.querySelector(".ecors-dropdown-plan-change"); 
+
 const changeBtn = document.querySelector(".ecors-button-change");
 
 const cancelSectionEl = document.querySelector(".cancel-section");
-// trigger button (outside dialog) has its own distinct class now
 const cancelBtn = document.querySelector(".ecors-button-cancel-trigger");
 
 // dialogs
@@ -38,13 +37,12 @@ const dialogs = document.querySelectorAll(".ecors-dialog");
 const dialogOk = dialogs[0];
 const dialogConfirm = dialogs[1];
 
-const dialogOkMsg = dialogOk.querySelector(".ecors-dialog-message");
-const dialogOkBtn = dialogOk.querySelector(".ecors-button-dialog");
+const dialogOkMsg = dialogOk ? dialogOk.querySelector(".ecors-dialog-message") : null;
+const dialogOkBtn = dialogOk ? dialogOk.querySelector(".ecors-button-dialog") : null;
 
-const dialogConfirmMsg = dialogConfirm.querySelector(".ecors-dialog-message");
-// dialogConfirm has its own .ecors-button-cancel inside the dialog
-const dialogConfirmCancelBtn = dialogConfirm.querySelector(".ecors-button-cancel");
-const dialogConfirmKeepBtn = dialogConfirm.querySelector(".ecors-button-keep");
+const dialogConfirmMsg = dialogConfirm ? dialogConfirm.querySelector(".ecors-dialog-message") : null;
+const dialogConfirmCancelBtn = dialogConfirm ? dialogConfirm.querySelector(".ecors-button-cancel") : null;
+const dialogConfirmKeepBtn = dialogConfirm ? dialogConfirm.querySelector(".ecors-button-keep") : null;
 
 const planListForCypress = document.querySelector(".ecors-plan-list");
 
@@ -59,7 +57,6 @@ let currentPlanNameEng = null;
 let currentUpdatedAt = null;
 
 // ==================== KEYCLOAK ====================
-// ตามคำขอของคุณ: ไม่แก้ค่า Keycloak URL / clientId
 const keycloak = new Keycloak({
   url: `https://bscit.sit.kmutt.ac.th/intproj25/ft/keycloak/`,
   realm: "itb-ecors",
@@ -74,7 +71,9 @@ keycloak
     studentId = keycloak.tokenParsed.preferred_username;
     authToken = keycloak.token;
 
-    fullNameEl.textContent = `Welcome, ${keycloak.tokenParsed.name}`;
+    const firstName = keycloak.tokenParsed.given_name || '';
+    const lastName = keycloak.tokenParsed.family_name || '';
+    fullNameEl.textContent = `Welcome, ${firstName} ${lastName}`;
 
     signOutBtn.addEventListener("click", () => {
       const home = `${window.location.origin}/intproj25/${TEAM_CODE}/itb-ecors/`;
@@ -149,7 +148,12 @@ function renderDeclared(data) {
   showChangeSection();
   showCancelSection();
 
+  // ตรงนี้จะส่ง changeDropdown (ที่แก้แล้ว) ไปให้ loadStudyPlans
+  // ข้อมูลจึงจะไปโผล่ถูกช่อง
   loadStudyPlans(changeDropdown, currentPlanId);
+  // เมื่อโหลดหน้า Declared แล้ว Dropdown จะแสดงแผนปัจจุบัน 
+  // ดังนั้นต้อง Disable ปุ่ม Change ทันที เพราะมันคือแผนเดียวกัน
+  changeBtn.disabled = true;
 }
 
 function renderNotDeclared() {
@@ -201,10 +205,9 @@ async function loadStudyPlans(dropdown, selectedId = null) {
     const res = await fetch(`${apiBaseUrl}/study-plans`, {
       headers: { Authorization: `Bearer ${authToken}` },
     });
-
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const plans = await res.json();
-
+    
     plans.forEach((p) => {
       const opt = document.createElement("option");
       opt.value = p.id;
@@ -212,13 +215,10 @@ async function loadStudyPlans(dropdown, selectedId = null) {
       if (selectedId && p.id === selectedId) opt.selected = true;
       dropdown.appendChild(opt);
 
-      // สำหรับ Cypress
       const row = document.createElement("div");
       row.classList.add("ecors-plan-row");
-      row.innerHTML = `
-        <span class="ecors-plan-code">${p.planCode}</span>
-        <span class="ecors-plan-name">${p.nameEng}</span>
-      `;
+      row.textContent = `${p.planCode} - ${p.nameEng}`; 
+
       planListForCypress.appendChild(row);
     });
   } catch (err) {
@@ -239,7 +239,7 @@ declareBtn.addEventListener("click", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        "Authorization": `Bearer ${authToken}`,
       },
       body: JSON.stringify({ planId: pid }),
     });
@@ -254,7 +254,7 @@ declareBtn.addEventListener("click", async () => {
       throw new Error(`HTTP ${res.status}`);
     }
   } catch (err) {
-    showDialog("There is a problem. Try again.");
+    showDialog("There is a problem. Please try again later.");
   }
 });
 
@@ -273,7 +273,7 @@ changeBtn.addEventListener("click", async () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        "Authorization": `Bearer ${authToken}`,
       },
       body: JSON.stringify({ planId: newId }),
     });
@@ -281,6 +281,7 @@ changeBtn.addEventListener("click", async () => {
     if (res.status === 200) {
       const data = await res.json();
       renderDeclared(data);
+      showDialog("Declaration updated.");
     } else if (res.status === 404) {
       showDialog("No declared plan found for student.");
       renderNotDeclared();
@@ -291,18 +292,14 @@ changeBtn.addEventListener("click", async () => {
       throw new Error(`HTTP ${res.status}`);
     }
   } catch (err) {
-    showDialog("There is a problem. Try again.");
+    showDialog("There is a problem. Please try again later.");
   }
 });
 
 // ==================== CANCEL (DELETE) ====================
-
-// listen on trigger button (outside dialog)
 cancelBtn.addEventListener("click", () => {
-  // ใช้ updatedAt ที่ backend ส่งมา
   const date = new Date(currentUpdatedAt || Date.now());
   
-  // Format ตาม requirement: DD/MM/YYYY HH:mm:ss
   const formatted = date.toLocaleString("en-GB", {
     day: "2-digit",
     month: "2-digit",
@@ -321,7 +318,6 @@ cancelBtn.addEventListener("click", () => {
 
   dialogConfirm.showModal();
 });
-
 
 dialogConfirmCancelBtn.addEventListener("click", confirmCancel);
 dialogConfirmKeepBtn.addEventListener("click", () => dialogConfirm.close());
@@ -357,14 +353,20 @@ async function confirmCancel() {
       throw new Error(`HTTP ${res.status}`);
     }
   } catch (err) {
-    showDialog("There is a problem. Try again.");
+    showDialog("There is a problem. Please try again later.");
   }
 }
 
 // ==================== DIALOG ====================
 function showDialog(msg) {
-  dialogOkMsg.textContent = msg;
-  dialogOk.showModal();
+  if (dialogOk && dialogOkMsg) {
+    dialogOkMsg.textContent = msg;
+    dialogOk.showModal();
+  } else {
+    console.warn("Dialog elements not found. Showing alert instead: " + msg);
+  }
 }
 
-dialogOkBtn.addEventListener("click", () => dialogOk.close());
+if (dialogOkBtn) {
+  dialogOkBtn.addEventListener("click", () => dialogOk.close());
+}

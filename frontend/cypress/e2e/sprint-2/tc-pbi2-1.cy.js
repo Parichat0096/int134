@@ -134,3 +134,4 @@ describe(`TC-PBI2-1 : SIGN-IN-AND-OUT-WITH-EXTERNAL-SERVICE\n
         cy.url().should('include','/keycloak/realms/itb-ecors/protocol/openid-connect/auth') ;
     })
 })
+ 
