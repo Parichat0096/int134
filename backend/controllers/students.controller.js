@@ -3,7 +3,7 @@ const declaredPlansService = require("../services/students.service");
 // GET /students/:id/declared-plan
 const getDeclaredPlan = async (req, res) => {
   try {
-    const studentId = req.params.id;
+    const studentId = req.params.studentId;
     const result = await declaredPlansService.findDeclaredPlan(studentId);
     return res.status(200).json(result);
   } catch (err) {
@@ -20,7 +20,7 @@ const getDeclaredPlan = async (req, res) => {
 // POST /students/:id/declared-plan
 const declarePlan = async (req, res) => {
   try {
-    const studentId = req.params.id;
+    const studentId = req.params.studentId;
     const { planId } = req.body;
 
     const data = await declaredPlansService.createDeclaration(studentId, planId);
@@ -39,7 +39,7 @@ const declarePlan = async (req, res) => {
 // PUT /students/:id/declared-plan
 const updateDeclaration = async (req, res) => {
   try {
-    const studentId = req.params.id;
+    const studentId = req.params.studentId;
     const { planId } = req.body;
 
     const data = await declaredPlansService.changePlan(studentId, planId);
@@ -64,7 +64,7 @@ const updateDeclaration = async (req, res) => {
 // DELETE /students/:id/declared-plan
 const cancelDeclaration = async (req, res) => {
   try {
-    const studentId = req.params.id;
+    const studentId = req.params.studentId;
 
     const data = await declaredPlansService.cancelPlan(studentId);
     return res.status(200).json(data);
