@@ -9,90 +9,97 @@ const mapDeclarationForApiResponse = (dbRow) => {
     planNameEng: dbRow.name_eng,
     createdAt: dbRow.created_at,
     updatedAt: dbRow.updated_at,
-    status: dbRow.status, // PBI 7
+    status: dbRow.status,
   };
 };
 
+// GET
 const findDeclaredPlan = async (studentId) => {
-  const declaredPlanRow = await studentsRepository.findDeclaredPlanByStudentId(
-    studentId
-  );
+  const declaredPlanRow = await studentsRepository.findDeclaredPlanByStudentId(studentId);
 
   if (!declaredPlanRow) {
-    throw new Error("DECLARED_PLAN_NOT_FOUND");
+    const err = new Error("DECLARED_PLAN_NOT_FOUND");
+    err.httpStatus = 404;
+    err.messageText = `No declared plan found for student with id=${studentId}.`;
+    throw err;
   }
 
   return mapDeclarationForApiResponse(declaredPlanRow);
 };
 
+// POST
 const createDeclaration = async (studentId, planId) => {
-  const existingPlan = await studentsRepository.findDeclaredPlanByStudentId(
-    studentId
-  );
+  const existing = await studentsRepository.findDeclaredPlanByStudentId(studentId);
 
-  if (existingPlan) {
-    if (existingPlan.status === "DECLARED") {
-      throw new Error("ALREADY_DECLARED");
+  if (existing) {
+    if (existing.status === "DECLARED") {
+      const err = new Error("ALREADY_DECLARED");
+      err.httpStatus = 409;
+      throw err;
     }
-    
-    if (existingPlan.status === "CANCELLED") {
+    if (existing.status === "CANCELLED") {
+      // update only: keep createdAt the same
       await studentsRepository.updatePlan(studentId, planId);
     }
   } else {
     await studentsRepository.create(studentId, planId);
   }
 
-  const declaredPlanRow = await studentsRepository.findDeclaredPlanByStudentId(
-    studentId
-  );
-  return mapDeclarationForApiResponse(declaredPlanRow);
+  const row = await studentsRepository.findDeclaredPlanByStudentId(studentId);
+  return mapDeclarationForApiResponse(row);
 };
 
+// PUT
 const changePlan = async (studentId, planId) => {
-  const existingPlan = await studentsRepository.findDeclaredPlanByStudentId(
-    studentId
-  );
+  const existing = await studentsRepository.findDeclaredPlanByStudentId(studentId);
 
-  if (!existingPlan) {
-    throw new Error("DECLARED_PLAN_NOT_FOUND");
+  if (!existing) {
+    const err = new Error("DECLARED_PLAN_NOT_FOUND");
+    err.httpStatus = 404;
+    err.messageText = `No declared plan found for student with id=${studentId}.`;
+    throw err;
   }
 
-  if (existingPlan.status === "CANCELLED") {
-    throw new Error("CANCELLED_DECLARED_PLAN");
+  if (existing.status === "CANCELLED") {
+    const err = new Error("CANCELLED_DECLARED_PLAN");
+    err.httpStatus = 409;
+    err.messageText = "Cannot update the declared plan because it has been cancelled.";
+    throw err;
   }
 
   await studentsRepository.updatePlan(studentId, planId);
 
-  const updatedPlanRow = await studentsRepository.findDeclaredPlanByStudentId(
-    studentId
-  );
-  return mapDeclarationForApiResponse(updatedPlanRow);
+  const updated = await studentsRepository.findDeclaredPlanByStudentId(studentId);
+  return mapDeclarationForApiResponse(updated);
 };
 
+// DELETE
 const cancelPlan = async (studentId) => {
-  const existingPlan = await studentsRepository.findDeclaredPlanByStudentId(
-    studentId
-  );
+  const existing = await studentsRepository.findDeclaredPlanByStudentId(studentId);
 
-  if (!existingPlan) {
-   
-    throw new Error("DECLARED_PLAN_NOT_FOUND");
+  if (!existing) {
+    const err = new Error("DECLARED_PLAN_NOT_FOUND");
+    err.httpStatus = 404;
+    err.messageText = `No declared plan found for student with id=${studentId}.`;
+    throw err;
   }
 
-  if (existingPlan.status === "CANCELLED") {
-    throw new Error("CANCELLED_DECLARED_PLAN");
+  if (existing.status === "CANCELLED") {
+    const err = new Error("CANCELLED_DECLARED_PLAN");
+    err.httpStatus = 409;
+    err.messageText = "Cannot cancel the declared plan because it is already cancelled.";
+    throw err;
   }
+
   await studentsRepository.cancelPlan(studentId);
 
-  const cancelledPlanRow = await studentsRepository.findDeclaredPlanByStudentId(
-    studentId
-  );
-  return mapDeclarationForApiResponse(cancelledPlanRow);
+  const updated = await studentsRepository.findDeclaredPlanByStudentId(studentId);
+  return mapDeclarationForApiResponse(updated);
 };
 
 module.exports = {
   findDeclaredPlan,
   createDeclaration,
-  changePlan, 
+  changePlan,
   cancelPlan,
 };

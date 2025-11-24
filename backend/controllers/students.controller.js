@@ -1,111 +1,93 @@
-const studentsService = require("../services/students.service");
+const declaredPlansService = require("../services/students.service");
 
-const getDeclaredPlan = async (req, res, next) => {
-  const studentId = req.params.studentId;
-
+// GET /students/:id/declared-plan
+const getDeclaredPlan = async (req, res) => {
   try {
-    const declaredPlan = await studentsService.findDeclaredPlan(studentId);
-    res.status(200).json(declaredPlan);
-  } catch (error) {
-    if (error.message === "DECLARED_PLAN_NOT_FOUND") {
+    const studentId = req.params.id;
+    const result = await declaredPlansService.findDeclaredPlan(studentId);
+    return res.status(200).json(result);
+  } catch (err) {
+    if (err.httpStatus === 404) {
       return res.status(404).json({
         error: "DECLARED_PLAN_NOT_FOUND",
-        message: `No declared plan found for student with id ${studentId}.`,
+        message: err.messageText,
       });
     }
-    next(error);
+    return res.status(500).json({ error: "INTERNAL_SERVER_ERROR" });
   }
 };
 
-const declarePlan = async (req, res, next) => {
-  const studentId = req.params.studentId;
-  const { planId } = req.body;
-
-  if (!planId) {
-    return res
-      .status(400)
-      .json({ message: "planId is required in the request body." });
-  }
-
+// POST /students/:id/declared-plan
+const declarePlan = async (req, res) => {
   try {
-    // Service handles logic for both new declaration and re-declaration (from CANCELLED)
-    const newDeclaration = await studentsService.createDeclaration(
-      studentId,
-      planId
-    );
-    
-    // POST returns 201 Created even when updating a CANCELLED record 
-    res.status(201).json(newDeclaration);
-  } catch (error) {
-    if (error.message === "ALREADY_DECLARED") {
+    const studentId = req.params.id;
+    const { planId } = req.body;
+
+    const data = await declaredPlansService.createDeclaration(studentId, planId);
+    return res.status(201).json(data);
+  } catch (err) {
+    if (err.httpStatus === 409 && err.message === "ALREADY_DECLARED") {
       return res.status(409).json({
         error: "ALREADY_DECLARED",
-        message: "A declaration already exists for this student.",
+        message: "Declared plan already exists.",
       });
     }
-    next(error);
+    return res.status(500).json({ error: "INTERNAL_SERVER_ERROR" });
   }
 };
 
-// --- NEW FOR SPRINT 3 (PBI 5 & 7) ---
-const changePlan = async (req, res, next) => {
-  const studentId = req.params.studentId;
-  const { planId } = req.body;
-
-  if (!planId) {
-    return res
-      .status(400)
-      .json({ message: "planId is required in the request body." });
-  }
-
+// PUT /students/:id/declared-plan
+const updateDeclaration = async (req, res) => {
   try {
-    const updatedPlan = await studentsService.changePlan(studentId, planId);
-    
-    // Per PBI 5, PUT returns 200 OK 
-    res.status(200).json(updatedPlan);
-  } catch (error) {
-    if (error.message === "DECLARED_PLAN_NOT_FOUND") {
+    const studentId = req.params.id;
+    const { planId } = req.body;
+
+    const data = await declaredPlansService.changePlan(studentId, planId);
+    return res.status(200).json(data);
+  } catch (err) {
+    if (err.httpStatus === 404) {
       return res.status(404).json({
         error: "DECLARED_PLAN_NOT_FOUND",
-        message: `No declared plan found for student with id ${studentId}.`,
+        message: err.messageText,
       });
     }
-    if (error.message === "CANCELLED_DECLARED_PLAN") {
+    if (err.httpStatus === 409 && err.message === "CANCELLED_DECLARED_PLAN") {
       return res.status(409).json({
         error: "CANCELLED_DECLARED_PLAN",
         message: "Cannot update the declared plan because it has been cancelled.",
       });
     }
-    next(error);
+    return res.status(500).json({ error: "INTERNAL_SERVER_ERROR" });
   }
 };
 
-const cancelPlan = async (req, res, next) => {
-  const studentId = req.params.studentId;
-
+// DELETE /students/:id/declared-plan
+const cancelDeclaration = async (req, res) => {
   try {
-    const cancelledPlan = await studentsService.cancelPlan(studentId);
-    res.status(200).json(cancelledPlan);
-  } catch (error) {
-    if (error.message === "DECLARED_PLAN_NOT_FOUND") {
+    const studentId = req.params.id;
+
+    const data = await declaredPlansService.cancelPlan(studentId);
+    return res.status(200).json(data);
+  } catch (err) {
+    if (err.httpStatus === 404) {
       return res.status(404).json({
         error: "DECLARED_PLAN_NOT_FOUND",
-        message: `No declared plan found for student with id ${studentId}.`,
+        message: err.messageText,
       });
     }
-    if (error.message === "CANCELLED_DECLARED_PLAN") {
+    if (err.httpStatus === 409 && err.message === "CANCELLED_DECLARED_PLAN") {
       return res.status(409).json({
         error: "CANCELLED_DECLARED_PLAN",
         message: "Cannot cancel the declared plan because it is already cancelled.",
       });
     }
-    next(error);
+    return res.status(500).json({ error: "INTERNAL_SERVER_ERROR" });
   }
 };
 
 module.exports = {
   getDeclaredPlan,
   declarePlan,
-  changePlan, 
-  cancelPlan, 
+  updateDeclaration,
+  cancelDeclaration,
 };
