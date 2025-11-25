@@ -1,0 +1,7 @@
+Node.js
+Express.js
+morgan (ไว้ดู log backend)
+dotenv (ของ ENV)
+mysql2
+ืnodemon
+camelcase-keys (ใช้เปลี่ยนจาก Snake Case เป็น Camel Case)

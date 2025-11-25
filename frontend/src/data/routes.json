@@ -1,0 +1,3 @@
+{
+  "/students/:studentId/declared-plan": "/declared-plans?studentId=:studentId"
+}

@@ -1,16 +1,25 @@
 {
-  "name": "frontend",
+  "name": "itb-ecors",
   "version": "1.0.0",
-  "private": true,
-  "type": "module",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite --config vite.config.dev.js",
-    "build": "vite build --config vite.config.prod.js",
-    "preview": "vite preview"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "backend": "json-server --watch ./src/data/mockup.json --routes ./src/data/routes.json --port 3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "keycloak-js": "^26.2.1",
+    "vite": "^7.2.2"
   },
   "devDependencies": {
+    "vite": "^7.2.2",
     "cypress": "^15.6.0",
-    "esbuild": "^0.25.12",
-    "vite": "^5.0.0"
+    "json-server": "^0.17.4"
   }
 }

@@ -1,20 +1,14 @@
-# Build stage
-FROM node:20-alpine AS build
+# Stage 1: Build
+FROM node:24.11.0-bookworm-slim AS build
 WORKDIR /app
-
-# Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy frontend source code and build
 COPY . .
 RUN npm run build
 
-# Production stage: nginx
+# Stage 2: Nginx serve
 FROM nginx:alpine
-
-# Copy nginx config
+WORKDIR /usr/share/nginx/html
+RUN mkdir -p intproj25/pl1/itb-ecors
+COPY --from=build /app/dist ./intproj25/pl1/itb-ecors
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy build output
-COPY --from=build /app/dist /usr/share/nginx/html/intproj25/pl1/itb-ecors

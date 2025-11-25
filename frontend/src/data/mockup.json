@@ -1,0 +1,87 @@
+{
+  "study-plans": [
+    {
+      "id": 1,
+      "planCode": "PLN001",
+      "nameEng": "Basic Health Plan",
+      "nameTh": "แผนสุขภาพพื้นฐาน"
+    },
+    {
+      "id": 2,
+      "planCode": "PLN002",
+      "nameEng": "Silver Care Plan",
+      "nameTh": "แผนดูแลเงินเงิน"
+    },
+    {
+      "id": 3,
+      "planCode": "PLN003",
+      "nameEng": "Gold Plus Plan",
+      "nameTh": "แผนทองพลัส"
+    },
+    {
+      "id": 4,
+      "planCode": "PLN004",
+      "nameEng": "Platinum Elite Plan",
+      "nameTh": "แผนแพลทินัมเอลิท"
+    },
+    {
+      "id": 5,
+      "planCode": "PLN005",
+      "nameEng": "Family Protection Plan",
+      "nameTh": "แผนคุ้มครองครอบครัว"
+    }
+  ],
+  "declared-plans": [
+    {
+      "studentId": "66010000001",
+      "planId": 1,
+      "createdAt": "2025-11-10T09:30:00Z",
+      "updatedAt": "2025-11-10T09:30:00Z"
+    },
+    {
+      "studentId": "66010000002",
+      "planId": 2,
+      "createdAt": "2025-11-11T14:15:00Z",
+      "updatedAt": "2025-11-11T14:15:00Z"
+    },
+    {
+      "studentId": "66010000003",
+      "planId": 3,
+      "createdAt": "2025-11-12T10:00:00Z",
+      "updatedAt": "2025-11-12T10:00:00Z",
+      "planCode": "PLN003",
+      "nameEng": "Gold Plus Plan",
+      "nameTh": "แผนทองพลัส"
+    },
+    {
+      "studentId": "66010000004",
+      "planId": 4,
+      "createdAt": "2025-11-12T11:45:00Z",
+      "updatedAt": "2025-11-12T11:45:00Z"
+    },
+    {
+      "studentId": "66010000005",
+      "planId": 5,
+      "createdAt": "2025-11-13T08:00:00Z",
+      "updatedAt": "2025-11-13T08:00:00Z"
+    },
+    {
+      "studentId": "66010000006",
+      "planId": 3,
+      "createdAt": "2025-11-13T10:00:00Z",
+      "updatedAt": "2025-11-13T10:00:00Z"
+    },
+    {
+      "studentId": "66010000007",
+      "planId": 2,
+      "createdAt": "2025-11-13T10:15:00Z",
+      "updatedAt": "2025-11-13T10:15:00Z"
+    },
+    {
+      "studentId": "66010000008",
+      "planId": 1,
+      "createdAt": "2025-11-13T11:00:00Z",
+      "updatedAt": "2025-11-13T11:00:00Z"
+    }
+  ]
+}

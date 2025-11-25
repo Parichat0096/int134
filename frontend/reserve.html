@@ -1,78 +1,36 @@
-<!-- reserve.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Manage Declaration - ITB-ECORS</title>
-
-    <link rel="stylesheet" href="./css/index.css">
-
-    <style>
-        a:hover { scale: 1.2; transition: 0.8s; }
-        dialog { padding: 20px; border-radius: 10px; }
-    </style>
+  <meta charset="UTF-8">
+  <title>My App</title>
+  <link rel="stylesheet" href="src/css/style.css">
+  <link rel="stylesheet" href="src/css/reserve.css">
 </head>
-
 <body>
-
-<header>
-    <a href="index.html" style="color:white;text-decoration:none;">
-        <span>Study Plan Declaration and Course Reservation</span>
-    </a>
-
-    <div>
-        <span class="ecors-fullname">Loading...</span>
-        <button class="ecors-button-signout">Sign Out</button>
+  <div class="header">
+    <div>Study Plan Declaration and Course Reservation</div>
+    <div id="profile">
+        <p class="ecors-fullname">Welcome, </p>
     </div>
-</header>
+  </div>
 
-<hr>
+  <div class="declared-plan">Declaration Status: <span class="ecors-declared-plan">Not Declared</span></div>
 
-<div class="ecors-declared-plan">Loading...</div>
-
-<!-- DECLARE SECTION -->
-<div class="declare-section" style="display:none;">
+  <div class="content">
     <h3>Declare Your Major</h3>
+    <form class="declare-form">
+      <label for="plan-select">Select Major:</label>
+      <select name="plan-id" id="plan-select" class="ecors-dropdown-plan">
+          <option value="" >-- Select Major --</option>
+      </select>
+      <button class="ecors-button-declare" disabled type="submit">Declare</button>
+    </form>
+  </div>
 
-    <select class="ecors-dropdown-plan"></select>
-    <button class="ecors-button-declare" disabled>Declare</button>
-</div>
-
-<!-- CHANGE SECTION -->
-<div class="change-section" style="display:none;">
-    <h3>Change Your Study Plan</h3>
-
-    <!-- distinct class to avoid selector ambiguity in Cypress -->
-    <select class="ecors-dropdown-plan-change"></select>
-    <button class="ecors-button-change" disabled>Change</button>
-</div>
-
-<!-- CANCEL SECTION -->
-<div class="cancel-section" style="display:none;">
-    <!-- trigger button class distinct from dialog button -->
-    <button class="ecors-button-cancel-trigger">Cancel Declaration</button>
-</div>
-
-<!-- DIALOG (OK) -->
-<dialog class="ecors-dialog">
-    <div class="ecors-dialog-message"></div>
-    <button class="ecors-button-dialog">OK</button>
-</dialog>
-
-<!-- CONFIRMATION DIALOG (ตาม Cypress spec) -->
-<dialog class="ecors-dialog ecors-dialog-confirm">
-    <div class="ecors-dialog-message"></div>
-    <!-- dialog's cancel button keeps the original class expected by tests -->
-    <button class="ecors-button-cancel">Cancel Declaration</button>
-    <button class="ecors-button-keep">Keep Declaration</button>
-</dialog>
-
-<!-- Hidden container for Cypress plan selectors -->
-<div class="ecors-plan-list" style="display:none;" aria-hidden="true"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/keycloak-js@24.0.0/dist/keycloak.min.js"></script>
-
-<script type="module" src="reserve-fullcode.js"></script>
-
+  <dialog class="ecors-dialog">
+    <p class="ecors-dialog-message"></p>
+    <button class="ecors-button-dialog">Ok</button>
+  </dialog>
+  <script src="src/js/reserve.js" type="module" ></script>
 </body>
 </html>

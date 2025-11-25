@@ -1,10 +1,10 @@
-FROM node:20
-
+FROM node:24.11.0-bookworm-slim
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm install
 COPY . .
-ENV LANG=C.UTF-8
 
-EXPOSE 3000
-CMD ["node", "server.js"]
+EXPOSE 3443
+
+CMD ["node", "app.js"]

@@ -1,92 +1,89 @@
 describe(`TC-PBI4-3 : DECLARE-PLAN\n
-      normal : - declare twice using two browser tabs`, () => {
+          normal : - declare twice using two browser tabs`, () => {
 
-    let resource = '/'
-    let baseAPI = Cypress.config('baseAPI')
-
-    beforeEach(() => {
-        cy.visit('/reserve.html')
-
-        // The app will always redirect to Keycloak, so we always
-        // need to use cy.origin() to handle the login page.
-        cy.origin('https://bscit.sit.kmutt.ac.th/', () => {
-            cy.get('input#username').should('exist').and('be.visible');
-            cy.get('input#password').should('exist').and('be.visible');
-
-            cy.get('input#username').type('67130500143');
-            cy.get('input#password').type('itbangmod');
-
-            cy.get('#kc-login').click();
-        });
-    });
-
-    it(`[step 1, Main] should sign in as Somnuk Doodee and open reserve.html page.\n
-      should show "Declaration Status: Not Declared".`, () => {
-        cy.visit('/reserve.html')
-        cy.get('.ecors-fullname').should('exist').and('be.visible').and('contain.text', 'Somnuk Doodee');
-
-        cy.get('.ecors-declared-plan').should('exist').and('be.visible')
-            .and('contain.text', 'Not Declared');
-    })
-
-    it(`[step 3, Second] should select 'UX - UX/UI Designer.\n
-      [step 4, Second] should click the 'Declare' button.\n 
-      [step 5, Main] should select 'DA - Data Analyst' from the dropdown.\n
-      [step 6, Main] should click 'Declare' button.\n
-      [step 7, Main] should show a dialog with message "You may have declared study plan already. Please check again." and click 'OK' button.\n
-      [step 8, Main] should click 'Sign Out' button.\n`, () => {
-
-        cy.visit('/reserve.html')
-        cy.wait(200);
-
- 
-        cy.intercept('POST', '**/students/67130500143/declared-plan').as('declarePlan');
+    Cypress.session.clearAllSavedSessions() ;
 
 
-        cy.request({
-            method: 'POST',
-            url: `${baseAPI}/students/67130500143/declared-plan`,
-            body: {
-                planId: 9
-            },
-            Headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            expect(response.status).to.equal(201)
-        })
+    it(`Should handle 409 Conflict correctly by showing alert/dialog 
+        and updating the declaration status automatically. 
+        Hide the 'Declare' button when status is declared.`, ()=>{
+            
+        cy.signIn('67130500143', 'itbangmod') ;
+        cy.visit('/reserve.html') ;
+        cy.wait(Cypress.config('regularWaitMs')) ;
+        
+        cy.log('------------------------------') ;
+        cy.log(' Stub a response that returns 409 Conflict') ;
+        cy.log(' But still send POST request to the backend server') ;
+        cy.log('------------------------------') ;
 
-        cy.get('.ecors-dropdown-plan').should('exist').and('be.visible');
-        cy.get('.ecors-dropdown-plan').select('DS - Data Scientist');
-        cy.get('.ecors-dropdown-plan').should('contain.text', 'DS - Data Scientist');
-        cy.get('.ecors-button-declare').should('exist').and('be.visible').and('be.enabled');
+        cy.intercept('POST', '**/students/**', (req) => {
+            req.continue((res) => {
+                res.send({
+                    statusCode: 409,
+                    body: {"error": "ALREADY_DECLARED", 
+                        "message": "A declaration already exists for this student."}
+                    }) ;
+                })
+            }).as('declarePlan') ;
 
-        cy.get('.ecors-button-declare').click();
-        cy.wait(200);
+        cy.get('.ecors-dropdown-plan').select('UX - UX/UI Designer') ;
+        cy.get('.ecors-button-declare').click() ;
+            
+        // Wait for the intercepted request to complete and verify the frontend handle of the 409 response
+        cy.wait('@declarePlan') ;
 
-        cy.wait('@declarePlan').its('response.statusCode').should('eq', 409);
+        cy.log('------------------------------') ;
+        cy.log(' Verify that the appropriate alert/dialog is shown to the user.') ;
+        cy.log('------------------------------') ;
 
         let alertShown = false;
         let alertText = '';
-
+        
         cy.on('window:alert', (msg) => {
             alertShown = true;
-            alertText = msg;
+            alertText = msg;                    
         });
+
+        const expectedAlertMessage = 'You may have declared study plan already. Please check again.';
 
         cy.then(() => {
             if (alertShown) {
-                expect(alertText).to.equal('You may have declared study plan already. Please check again.');
+                expect(alertText).to.equal(expectedAlertMessage);
             } else {
-                cy.get('.ecors-dialog').should('be.visible');
-                cy.get('.ecors-dialog .ecors-dialog-message').should('have.text', 'You may have declared study plan already. Please check again.');
-
-                // Note: Make sure your dialog button has the class 'ecors-button-dialog'
+                cy.get('.ecors-dialog').should('be.visible') ;
+                cy.get('.ecors-dialog .ecors-dialog-message').should('have.text', expectedAlertMessage) ;
                 cy.contains('.ecors-dialog .ecors-button-dialog', /^ok$/i).should('be.visible').click();
             }
         });
 
-        cy.get('.ecors-button-signout').should('exist').and('be.visible').and('contain.text', 'Sign Out').click();
-    })
+        cy.log('------------------------------') ;
+        cy.log(' Verify that the declartion status is updated to UX - UX/UI Designer automatically.') ;
+        cy.log(' The updatedAt time is about now and the Declare button is hidden.') ;
+        cy.log('------------------------------') ;
+
+        cy.get('.ecors-declared-plan').should('exist').and('be.visible')
+          .and('contain.text','Declared UX - UX/UI Designer');
+        cy.get('.ecors-declared-plan').invoke('text').as('statusAfterDeclare').then( text => Cypress.utils.shouldBeNow(text, {withinMs: 3000})) ;
+        cy.get('.ecors-button-declare').should('exist').and('not.be.visible') ;
+
+        cy.log('------------------------------') ;
+        cy.log(' Verify the declaration status after reload') ;
+        cy.log('------------------------------') ;
+
+        // Refresh the page and verify the declaration status is the same after reload
+        cy.reload() ;
+        cy.wait(Cypress.config('regularWaitMs')) ;
+
+        cy.get('.ecors-declared-plan').should('exist').and('be.visible') ;
+        cy.get('.ecors-declared-plan').invoke('text').as('statusAfterReload') ;
+        cy.get('@statusAfterDeclare').then( statusAfterDeclare => {
+            cy.get('@statusAfterReload').then( statusAfterReload => {
+                expect(statusAfterReload, 'The status display should be the same after page reload')
+                  .to.equal(statusAfterDeclare) ;
+            });
+        });
+        cy.get('.ecors-button-declare').should('exist').and('not.be.visible') ;
+    })    
 
 })
