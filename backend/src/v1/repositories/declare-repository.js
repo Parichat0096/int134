@@ -9,7 +9,7 @@ module.exports = {
         const [rows] = await pool.query('SELECT * FROM declared_plans WHERE student_id = ?',[id])
         return rows[0]
     },
-    createDelacre: async function(id,planId){
+    createdeclare: async function(id,planId){
         const [rows] = await pool.query('INSERT INTO declared_plans (student_id, plan_id) VALUES (?,?)',[id,planId])
         return await this.findById(id)
     },

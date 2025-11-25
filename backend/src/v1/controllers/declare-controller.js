@@ -1,6 +1,6 @@
-var delacrePlanDto = require("../dtos/delacre-dto.js");
-const { changeDeclared } = require("../repositories/delacre-repository.js");
-var service = require("../services/delacre-service.js")
+var declarePlanDto = require("../dtos/declare-dto.js");
+const { changeDeclared } = require("../repositories/declare-repository.js");
+var service = require("../services/declare-service.js")
 
 function error(error, message, statusCode){
     return {
@@ -14,9 +14,9 @@ module.exports = {
     getById : async function(req,res) {
         try{
             const id = req.params.id // รับ ID มาจาก ROUTER แล้วต้องเอาไปทำเป็น String
-            const declaredPlan = await service.getDelacreById(id.toString())
+            const declaredPlan = await service.getdeclareById(id.toString())
 
-            const result = new delacrePlanDto(declaredPlan) // อันนี้เราเอาเข้า dto ปล.เหตุผลที่ไม่ map
+            const result = new declarePlanDto(declaredPlan) // อันนี้เราเอาเข้า dto ปล.เหตุผลที่ไม่ map
             //เพราะรับมาเป็น row[0] มันเป็น {object มาเลย}
 
             res.status(200).json(result) 
@@ -27,13 +27,13 @@ module.exports = {
         }//ส่งคืนปกติถ้าเจอ error
     },
 
-    addDelacre : async function (req,res) {
+    adddeclare : async function (req,res) {
         try{
             const id = req.params.id
             const Body = req.body
 
-            const create = await service.createDelacre(id,Body.planId) // อย่าลืมFrontให้ส่งมาเป็น PlanId
-            const result = new delacrePlanDto(create)
+            const create = await service.createdeclare(id,Body.planId) // อย่าลืมFrontให้ส่งมาเป็น PlanId
+            const result = new declarePlanDto(create)
             res.status(201).json(result)
         }
         catch(e){
@@ -46,7 +46,7 @@ module.exports = {
             const id = req.params.id
             const {planId} = req.body
             const declaredPlan = await service.changeDeclared(id,planId)
-            const result = new delacrePlanDto(declaredPlan)
+            const result = new declarePlanDto(declaredPlan)
             res.json(result)
         }catch (e){
             res.status(e.status).json(error(e.error,e.message,e.status));
@@ -56,7 +56,7 @@ module.exports = {
         try{
             const id = req.params.id
             const declaredPlan = await service.deleteDeclared(id)
-            const result = new delacrePlanDto(declaredPlan)
+            const result = new declarePlanDto(declaredPlan)
             res.status(200).json(result)
         }catch (e){
             res.status(e.status).json(error(e.error,e.message,e.status));

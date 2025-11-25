@@ -1,6 +1,6 @@
-class delacrePlanDto {
-  constructor(delacre = {}) {
-    const { student_id, plan_id, status , created_at, updated_at } = delacre
+class declarePlanDto {
+  constructor(declare = {}) {
+    const { student_id, plan_id, status , created_at, updated_at } = declare
 
     this.studentId = student_id ?? null
     this.planId = plan_id ?? "-"
@@ -10,4 +10,4 @@ class delacrePlanDto {
 
   }
 }
-module.exports = delacrePlanDto;
+module.exports = declarePlanDto;
