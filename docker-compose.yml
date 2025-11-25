@@ -24,10 +24,11 @@ services:
       DB_USER: root
       DB_PASSWORD: int504
       DB_NAME: pl1
+      NODE_ENV: production
     volumes:
       - ./nginx/ssl:/etc/ssl
     ports:
-      - "3443:3443" # HTTPS backend
+      - "3443:3443"
     depends_on:
       - db
     networks:
