@@ -1,24 +1,41 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+var express = require('express');
+var logger = require('morgan');
+const fs = require("fs");
+const https = require("https");
 
-const apiRouter = require('./routes');
-const notFound = require('./middleware/notFound');
-const errorHandler = require('./middleware/errorHandler');
+// var cors = require('cors');
 
-const app = express();
+var planRouter = require("./src/v1/routes/plan-router")
+var declareRouter = require("./src/v1/routes/delacre-router")
 
-app.use(cors());
+var app = express();
+
+// Middlewares
+app.use(logger('dev'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// app.use(cors())
 
-const TEAM_CODE = process.env.TEAM_CODE || 'ft';
-const APP_BASE_PATH = `/intproj25/${TEAM_CODE}/itb-ecors`;
-app.get('/test', (req, res) => {
-    res.send({ status: 'API Base Server is working' });
+// Routes
+app.use('/v1/study-plans', planRouter);
+app.use('/v1/students', declareRouter);
+
+// TLS 1.3 only
+const options = {
+    key: fs.readFileSync("/etc/ssl/server.key"),
+    cert: fs.readFileSync("/etc/ssl/server.crt"),
+    // secureProtocol: "TLSv1_3_method"  // Force TLS 1.3
+};
+
+// http
+// app.listen(3000, () => {
+//     console.log("Backend HTTP running on port 3000");
+// });
+
+
+// Start HTTPS server
+https.createServer(options, app).listen(3443, () => {
+    console.log("Backend HTTPS running on port 3443 (TLS 1.3 only)");
 });
-app.use(`${APP_BASE_PATH}/api/v1`, apiRouter);
-
-app.use(notFound);
-app.use(errorHandler);
 
 module.exports = app;

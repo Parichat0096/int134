@@ -1,0 +1,24 @@
+CREATE DATABASE IF NOT EXISTS pl1
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE pl1;
+
+SET NAMES utf8mb4;
+
+CREATE TABLE study_plans (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  plan_code CHAR(2) UNIQUE NOT NULL,
+  name_eng VARCHAR(60) NOT NULL,
+  name_th VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE declared_plans (
+  student_id CHAR(11),
+  plan_id INT,
+  status Enum("DECLARED", "CANCELLED") default "DECLARED",
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+  PRIMARY KEY (student_id),
+  FOREIGN KEY (plan_id) REFERENCES study_plans(id)
+);

@@ -1,4 +1,0 @@
-### Sprint 2 Commitment
-- [x] PBI-2 SIGN-IN-AND-OUT-WITH-EXTERNAL-SERVICE  
-- [x] PBI-3 VIEW-DECLARED-PLAN  
-- [x] PBI-4 DECLARE-PLAN  

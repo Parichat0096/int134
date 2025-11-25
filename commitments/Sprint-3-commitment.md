@@ -1,6 +1,0 @@
-### Sprint 3 Commitment
-- [x] PBI-5 CHANGE-PLAN  
-- [x] PBI-6 CANCEL-PLAN  
-- [x] PBI-7 SHOW-LAST-PLAN-CANCELLATION  
-- [x] PBI-8 SECURE-CONNECTION  
-- [x] PBI-9 RESERVE-COURSES  

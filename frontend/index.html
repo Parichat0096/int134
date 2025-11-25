@@ -1,51 +1,30 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="./css/index.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    a:hover{
-      scale: 1.02;
-      transition: 0.8;
-    }
-  </style>
-  <title>Study Plans</title>
+  <meta charset="UTF-8">
+  <title>My App</title>
+  <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
-  <nav class="glass-navbar">
-    <div class="nav-logo">
-      <img src="./images/SIT LOGO White.png" alt="SITlogo">
-      <a href="index.html"  style="color: white; text-decoration: none;">
-        <span>Study Plan declaration and course reservation</span>
-      </a>
-    </div>
+  <div class="header">
+    <div>Study Plan Declaration and Course Reservation</div>
+  </div>
 
-    <!-- ปุ่ม Manage ที่ Cypress ต้องใช้ -->
-    <button class="ecors-button-manage" onclick="location.href='reserve.html'">
-      Manage study plan declaration and course reservation
-    </button>
+  <div class="ecors-button-manage">
+    <a href="./reserve.html">Manage study plan declaration and course reservation</a>
+  </div>
 
-  </nav>
-  
-  <main>
-    <h2>Available Study Plans</h2>
-    <table id="planTable">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Study Code</th>
-          <th>English Name</th>
-          <th>Thai Name</th>
-        </tr>
-      </thead>
-      <tbody id="planBody">
-        <tr><td colspan="4" class="no-data">Loading...</td></tr>
-      </tbody>
+  <div class="content">
+    <div>B.Sc.IT - Study Plans</div>
+    <table class="planList">
+
     </table>
-  </main>
+  </div>
 
-  <script type="module" src="app.js"></script>
+  <dialog class="ecors-dialog" closedby="none">
+    <p class="ecors-dialog-message">There is a problem. Please try again later.</p>
+  </dialog>
 
+  <script src="src/js/app.js" type="module" ></script>
 </body>
 </html>
