@@ -18,12 +18,12 @@ CREATE TABLE semesters (
 -- 2. ตาราง Courses (วิชาทั้งหมด)
 CREATE TABLE courses (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  code VARCHAR(6) NOT NULL,
+  code VARCHAR(6) UNIQUE NOT NULL,
   title VARCHAR(100) NOT NULL,
   credits INT NOT NULL
 );
 
--- 3. ตาราง Study Plans (แผนการเรียน - ของเดิม)
+-- 3. ตาราง Study Plans (แผนการเรียน)
 CREATE TABLE study_plans (
   id INT AUTO_INCREMENT PRIMARY KEY,
   plan_code CHAR(2) UNIQUE NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE plan_core_courses (
   FOREIGN KEY (course_id) REFERENCES courses(id)
 );
 
--- 5. ตาราง Declared Plans (การเลือกแผน - ของเดิม)
+-- 5. ตาราง Declared Plans (การเลือกแผน)
 CREATE TABLE declared_plans (
   student_id CHAR(11) PRIMARY KEY,
   plan_id INT NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE reservation_periods (
   start_datetime DATETIME NOT NULL,
   end_datetime DATETIME NOT NULL,
   cumulative_credit_limit INT NOT NULL,
-  is_active TINYINT DEFAULT 1,
+  is_active TINYINT(1) DEFAULT 1,
   FOREIGN KEY (semester_id) REFERENCES semesters(id)
 );
 

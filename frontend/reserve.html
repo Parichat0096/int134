@@ -4,33 +4,61 @@
   <meta charset="UTF-8">
   <title>My App</title>
   <link rel="stylesheet" href="src/css/style.css">
-  <link rel="stylesheet" href="src/css/reserve.css">
+  <link rel="stylesheet" href="src/css/reserve.css"> 
 </head>
 <body>
   <div class="header">
-    <div>Study Plan Declaration and Course Reservation</div>
+    <div>Study Plan Declaration and Course Reservation </div>
     <div id="profile">
         <p class="ecors-fullname">Welcome, </p>
     </div>
   </div>
 
+  <div class="reservation-period-section">
+      </div>
+
   <div class="declared-plan">Declaration Status: <span class="ecors-declared-plan">Not Declared</span></div>
 
   <div class="content">
-    <h3>Declare Your Major</h3>
-    <form class="declare-form">
-      <label for="plan-select">Select Major:</label>
-      <select name="plan-id" id="plan-select" class="ecors-dropdown-plan">
-          <option value="" >-- Select Major --</option>
-      </select>
-      <button class="ecors-button-declare" disabled type="submit">Declare</button>
-    </form>
+    <div id="declaration-section">
+        <h3>Declare Your Major</h3>
+        <form class="declare-form">
+        <label for="plan-select">Select Major:</label>
+        <select name="plan-id" id="plan-select" class="ecors-dropdown-plan">
+            <option value="" >-- Select Major --</option>
+        </select>
+        <button class="ecors-button-declare" disabled type="submit">Declare</button>
+        </form>
+    </div>
+    
+
+    <hr>
+
+    <div id="reservation-section" style="display: none;">
+        <h3>Your Reservations</h3>
+        <div id="your-reservations-list">
+            <p>No reserved courses yet.</p>
+        </div>
+        
+        <div class="credit-summary">
+            Credits Reserved: 
+             <span id="total-credits" data-cy="total-reserved-credits">0</span>/<span id="credit-limit" data-cy="total-limit-credits">0</span>   
+        </div>
+
+        <hr>
+
+        <h3>Course Offerings</h3>
+        <div id="course-offerings-list">
+            </div>
+     </div>
   </div>
 
   <dialog class="ecors-dialog">
     <p class="ecors-dialog-message"></p>
-    <button class="ecors-button-dialog">Ok</button>
+    <div class="dialog-buttons">
+        <button class="ecors-button-dialog">Ok</button>
+    </div>
   </dialog>
   <script src="src/js/reserve.js" type="module" ></script>
 </body>
-</html>
+</html> 
