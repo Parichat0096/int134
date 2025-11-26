@@ -1,21 +1,21 @@
-const repo = require("../repositories/delacre-repository.js")
+const repo = require("../repositories/declare-repository.js")
 
 module.exports = {
-    getAllDelacre: async function() {
-        const delacre = await repo.findAll();
-        return delacre
+    getAlldeclare: async function() {
+        const declare = await repo.findAll();
+        return declare
     },
-    getDelacreById: async function(id){
-        const delacre = await repo.findById(id);
-        if(!delacre){
+    getdeclareById: async function(id){
+        const declare = await repo.findById(id);
+        if(!declare){
                 const error = new Error(`not found ${id} in declared_plans table (the student has not declared a study plan)`)
                 error.status = 404;
                 throw error
         }//อันนี้คือสมมุติข้อมูลมันไม่มี อันดิฟาย มาให้ สร้าง error404 แล้ว Catch จะจับ error
-        return delacre
+        return declare
     },
-    createDelacre: async function(id,planId) {
-        const student = await repo.findById(id) //ดึง Delacre มาดูจาก serive จาก repo
+    createdeclare: async function(id,planId) {
+        const student = await repo.findById(id) //ดึง declare มาดูจาก serive จาก repo
         if(student){
             if(student.status === "DECLARED"){
                 const error = new Error(`A declaration record already exists for the student with id = ${id}. No new record is created.`)
@@ -27,7 +27,7 @@ module.exports = {
                 return declaredNew
             }
         }
-        const created = await repo.createDelacre(id,planId)
+        const created = await repo.createdeclare(id,planId)
         return created
     },
     changeDeclared: async function(id,planId) {
