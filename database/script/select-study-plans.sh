@@ -16,6 +16,10 @@ else
   echo "⚠️  Warning: $ENV_FILE not found, using default values."
   DB_HOST="db"
   DB_USER="root"
+
+
+
+  
   DB_PASSWORD="int504"
   DB_NAME="pl1"
 fi

@@ -5,7 +5,9 @@ const https = require("https");
 
 var planRouter = require("./src/v1/routes/plan-router")
 var declareRouter = require("./src/v1/routes/declare-router")
-
+var reservationRouter = require('./src/v1/routes/reservation-router');
+var reservationPeriodRouter = require('./src/v1/routes/reservation-period.router')
+var courseRouter = require('./src/v1/routes/course-router');
 var app = express();
 
 // Middlewares
@@ -16,7 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/v1/study-plans', planRouter);
 app.use('/v1/students', declareRouter);
-
+app.use('/v1/students', reservationRouter);
+app.use('/v1', courseRouter);
+app.use('/v1', reservationPeriodRouter);
 const isProd = process.env.NODE_ENV === 'production';
 
 if (isProd) {

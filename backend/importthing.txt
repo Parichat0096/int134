@@ -5,3 +5,7 @@ dotenv (ของ ENV)
 mysql2
 ืnodemon
 camelcase-keys (ใช้เปลี่ยนจาก Snake Case เป็น Camel Case)
+
+
+
+http://localhost/intproj25/pl1/itb-ecors/api/v1/study-plans

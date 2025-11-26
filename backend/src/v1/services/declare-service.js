@@ -1,5 +1,5 @@
 const repo = require("../repositories/declare-repository.js")
-
+const reservationPeriodService = require("./reservation-period-service.js")
 module.exports = {
     getAlldeclare: async function() {
         const declare = await repo.findAll();
@@ -15,6 +15,8 @@ module.exports = {
         return declare
     },
     createdeclare: async function(id,planId) {
+        // 1. ตรวจสอบ Period ก่อนทำอย่างอื่น (Precedence: 403 มาก่อน) 
+        await reservationPeriodService.validateReservationPeriod();
         const student = await repo.findById(id) //ดึง declare มาดูจาก serive จาก repo
         if(student){
             if(student.status === "DECLARED"){
@@ -31,6 +33,8 @@ module.exports = {
         return created
     },
     changeDeclared: async function(id,planId) {
+        // 1. ตรวจสอบ Period ก่อนทำอย่างอื่น (Precedence: 403 มาก่อน) 
+        await reservationPeriodService.validateReservationPeriod();
         const student = await repo.findById(id)
         if(!student){
             const error = new Error()
@@ -50,6 +54,7 @@ module.exports = {
         return declaredNew
     },
     deleteDeclared: async function(id) {
+        await reservationPeriodService.validateReservationPeriod();
         const student = await repo.findById(id)
         if(!student){
             const error = new Error()
